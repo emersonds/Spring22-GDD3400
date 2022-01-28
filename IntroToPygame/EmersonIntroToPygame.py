@@ -40,9 +40,6 @@ while True:
     player.update()
     player.draw(screen)
 
-    # Fill screen and draw square
-    #pygame.draw.rect(screen, square_color, pygame.Rect(initX, initY, square_width, square_height))
-
     # Refresh screen
     pygame.display.flip()
     clock.tick(60)
