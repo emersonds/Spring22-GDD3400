@@ -13,14 +13,14 @@ class Vector:
 
     # Adds two vectors together
     def __add__(self, other):
-        return Vector(self.x + other.y, self.y + other.y)
+        return Vector(self.x + other.x, self.y + other.y)
 
     # Subtracts two vectors from each other
     def __sub__(self, other):
         return Vector(self.x - other.x, self.y - other.y)
 
-    # Multiplies two vectors together
-    def __multiply__(self, other):
+    # Multiplies a vector by an int
+    def __mult__(self, other):
         return Vector(self.x * other.x, self.y * other.y)
     
     # Returns dot product of two vectors
@@ -37,11 +37,14 @@ class Vector:
     
     # Normalizes the vector by changing its length to 1 while pointing in the same direction
     def normalize(self):
+        # Store self.length because sqrt is expensive
+        leng = self.length()
+
         # Check if length is 0 to prevent divide-by-zero errors
-        if self.length() == 0:
+        if leng == 0:
             return Vector(0,0)
         else:
-            return Vector(self.x / self.length(), self.y / self.length())
+            return Vector(self.x / leng, self.y / leng)
 
     # Returns a zero Vector
     def zero():

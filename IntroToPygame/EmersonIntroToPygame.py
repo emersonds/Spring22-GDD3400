@@ -23,7 +23,7 @@ initY = 30
 square_color = (27, 38, 79)
 
 # Create player
-player = Player(Vector(initX, initY), 5, square_size)
+player = Player(Vector(initX, initY), Vector.zero(), square_size)
 
 # Gameplay loop
 while True:
