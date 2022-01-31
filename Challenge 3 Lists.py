@@ -1,16 +1,16 @@
-items = [ "Wallet", "Phone", "Keys" ]
-print(items)
-items.sort()
-print(items)
-print(items[0])
-print(items[1:3])
-print(items[-1])
-print(str(items.index("Keys")))
-items.append("Tablet")
-print(items)
-items.insert(1, "Glasses")
-print(items)
-items.remove("Phone")
-print(items)
-items.reverse()
-print(items)
+items = [ "Wallet", "Phone", "Keys" ]   # Initialize list
+print(items)                            # Print "items"
+items.sort()                            # Sort "items"
+print(items)                            # Print sorted "items"
+print(items[0])                         # Print the value of the first index in "items"
+print(items[1:3])                       # Print the values of all but the first index in "items"
+print(items[-1])                        # Print the value of the last index in "items"
+print(str(items.index("Keys")))         # Print the index of "Keys" in "items"
+items.append("Tablet")                  # Append "Tablet" to "items". (This puts tablet at the end of the list)
+print(items)                            # Print updated "items"
+items.insert(1, "Glasses")              # Insert "Glasses" at the second index of "items"
+print(items)                            # Print updated "items"
+items.remove("Phone")                   # Remove "Phone" from "items"
+print(items)                            # Print updated "items"
+items.reverse()                         # Reverse "items"
+print(items)                            # Print updated "items"
