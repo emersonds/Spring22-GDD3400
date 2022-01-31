@@ -19,11 +19,6 @@ screen = pygame.display.set_mode((display_width, display_height))
 clock = pygame.time.Clock()
 background_color = (100, 149, 237)
 
-# Base square
-square_size = 60
-initX = 30
-initY = 30
-square_color = (27, 38, 79)
 
 # Gameplay loop
 while True:

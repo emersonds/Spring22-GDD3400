@@ -7,23 +7,14 @@ import pygame
 from pygame.locals import *
 
 # Import custom classes
-
+import Constants
 
 # Initialize pygame
 pygame.init()
 
 # Display mode properties
-display_width = 800
-display_height = 600
-screen = pygame.display.set_mode((display_width, display_height))
+screen = pygame.display.set_mode((Constants.DISPLAY_WIDTH, Constants.DISPLAY_HEIGHT))
 clock = pygame.time.Clock()
-background_color = (100, 149, 237)
-
-# Base square
-square_size = 60
-initX = 30
-initY = 30
-square_color = (27, 38, 79)
 
 # Gameplay loop
 while True:
@@ -34,8 +25,8 @@ while True:
             quit()
 
     # Fill screen
-    screen.fill(background_color)
+    screen.fill(Constants.BACKGROUND_COLOR)
 
     # Refresh screen
     pygame.display.flip()
-    clock.tick(60)
+    clock.tick(Constants.FRAME_RATE)
