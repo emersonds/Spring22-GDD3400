@@ -7,13 +7,13 @@ import pygame
 from pygame.locals import *
 
 # Import custom classes
-import Constants
+import Constants as Const       # "Constants" is too much to type a lot, so refer to it as Const
 
 # Initialize pygame
 pygame.init()
 
 # Display mode properties
-screen = pygame.display.set_mode((Constants.DISPLAY_WIDTH, Constants.DISPLAY_HEIGHT))
+screen = pygame.display.set_mode((Const.DISPLAY_WIDTH, Const.DISPLAY_HEIGHT))
 clock = pygame.time.Clock()
 
 # Gameplay loop
@@ -25,8 +25,8 @@ while True:
             quit()
 
     # Fill screen
-    screen.fill(Constants.BACKGROUND_COLOR)
+    screen.fill(Const.BACKGROUND_COLOR)
 
     # Refresh screen
     pygame.display.flip()
-    clock.tick(Constants.FRAME_RATE)
+    clock.tick(Const.FRAME_RATE)
