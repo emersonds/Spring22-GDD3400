@@ -33,8 +33,8 @@ while True:
     screen.fill(Const.BACKGROUND_COLOR)
 
     # Draw player
-    player.draw(screen)
     player.update()
+    player.draw(screen)
 
     # Refresh screen
     pygame.display.flip()
