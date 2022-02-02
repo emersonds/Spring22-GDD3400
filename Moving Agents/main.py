@@ -8,8 +8,9 @@ from pygame.locals import *
 
 # Import custom classes
 import Constants as Const       # "Constants" is too much to type a lot, so refer to it as Const
-from Player import Player
-from Vector import Vector
+from Enemy import *
+from Player import *
+from Vector import *
 
 # Initialize pygame
 pygame.init()
@@ -20,6 +21,13 @@ clock = pygame.time.Clock()
 
 # Initialize player
 player = Player(Vector(Const.SCREEN_SIZE.x / 2, Const.SCREEN_SIZE.y / 2), Const.PLAYER_SPEED, Const.PLAYER_SIZE)
+
+# Initialize enemies
+enemy0 = Enemy(Vector(100, 100), Const.ENEMY_SPEED, Const.ENEMY_SIZE)
+
+# List of enemies: enemies = []
+# Use a while loop
+# i = 0; while len(enemies) < 10: enemies.append(Enemy(pos, speed, size))
 
 # Gameplay loop
 while True:
@@ -35,6 +43,10 @@ while True:
     # Draw player
     player.update()
     player.draw(screen)
+
+    #Draw enemies
+    enemy0.update()
+    enemy0.draw(screen)
 
     # Refresh screen
     pygame.display.flip()

@@ -2,7 +2,7 @@
 #   Author: Dylan Emerson
 #   File: Constants.py
 
-from Vector import Vector
+from Vector import *
 
 # Screen constants
 BACKGROUND_COLOR = (100, 149, 237)
@@ -15,6 +15,11 @@ FRAME_RATE = 60
 PLAYER_COLOR = (246, 240, 136)
 PLAYER_SIZE = 10
 PLAYER_SPEED = 5.5
+
+# Enemy constants
+ENEMY_COLOR = (89, 205, 144)
+ENEMY_SIZE = 10
+ENEMY_SPEED = 5
 
 # Velocity Indicator (VI) constants
 VI_COLOR = (0, 0, 255)
