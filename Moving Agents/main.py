@@ -8,6 +8,8 @@ from pygame.locals import *
 
 # Import custom classes
 import Constants as Const       # "Constants" is too much to type a lot, so refer to it as Const
+from Player import Player
+from Vector import Vector
 
 # Initialize pygame
 pygame.init()
@@ -15,6 +17,9 @@ pygame.init()
 # Display mode properties
 screen = pygame.display.set_mode((Const.DISPLAY_WIDTH, Const.DISPLAY_HEIGHT))
 clock = pygame.time.Clock()
+
+# Initialize player
+player = Player(Vector(Const.SCREEN_SIZE.x / 2, Const.SCREEN_SIZE.y / 2), Const.PLAYER_SPEED, Const.PLAYER_SIZE)
 
 # Gameplay loop
 while True:
@@ -26,6 +31,10 @@ while True:
 
     # Fill screen
     screen.fill(Const.BACKGROUND_COLOR)
+
+    # Draw player
+    player.draw(screen)
+    player.update()
 
     # Refresh screen
     pygame.display.flip()

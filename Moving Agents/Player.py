@@ -2,7 +2,6 @@
 #   Author: Dylan Emerson
 #   File: Player.py
 
-from tkinter import CENTER
 import pygame
 
 import Constants as Const
