@@ -2,6 +2,7 @@
 #   Author: Dylan Emerson
 #   File: Enemy.py
 
+#from time import time
 import pygame
 
 import Constants as Const
@@ -25,12 +26,19 @@ class Enemy:
             "\nCenter:", str(self.center))
 
     # Moves the enemy
-    def update(self):
+    def update(self, player):
 
         # Initialize movement vector
         self.velocity = Vector.zero()                       # Zero out velocity so the enemy doesn't slide in between movements.
 
-        # Set velocity and move enemy
+        # Calculate distance to player (flee range)
+        playerDist = self.position - player.position
+
+        # Flee if player is within range
+        if (playerDist.length() < 200):
+            self.velocity = playerDist
+
+        # Normalize velocity and move enemy
         self.velocity = self.velocity.normalize()           # Normalize velocity
         self.position += self.velocity.scale(self.speed)    # Scale it by a speed factor
         
@@ -40,7 +48,8 @@ class Enemy:
         # Draw enemy
         pygame.draw.rect(screen, (self.color), pygame.Rect(self.position.x, self.position.y, self.size, self.size))
 
-        # Draw line from enemy showing direction
+        # Draw line from center of enemy
+        self.center = self.calcCenter()
         pygame.draw.line(screen, (Const.VI_COLOR), (self.center.x, self.center.y),
             (self.center.x + self.velocity.x * Const.VI_LENGTH, self.center.y + self.velocity.y * Const.VI_LENGTH))   # Draw line
 

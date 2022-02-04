@@ -3,6 +3,7 @@
 #   File: Player.py
 
 import pygame
+import math
 
 import Constants as Const
 from Enemy import *
@@ -25,12 +26,23 @@ class Player:
             "\nCenter:", str(self.center))
 
     # Moves the player
-    def update(self):
+    def update(self, enemies):
 
         # Initialize movement vector
         self.velocity = Vector.zero()                       # Zero out velocity so the player doesn't slide in between movements.
 
+        # Initialize closest enemy to first enemy in the list
+        minDistance = math.sqrt((enemies[0].position.x - self.position.x)**2 + (enemies[0].position.y - self.position.y)**2)
+        closestEnemy = enemies[0]
+        # Check distance from each enemy
+        for enemy in enemies:
+            enemyDistance = math.sqrt((enemy.position.x - self.position.x)**2 + (enemy.position.y - self.position.y)**2)
+            if (enemyDistance < minDistance):
+                minDistance = enemyDistance
+                closestEnemy = enemy
+
         # Set velocity and move player
+        self.velocity = closestEnemy.position - self.position
         self.velocity = self.velocity.normalize()           # Normalize velocity
         self.position += self.velocity.scale(self.speed)    # Scale it by a speed factor
         
@@ -40,7 +52,8 @@ class Player:
         # Draw player
         pygame.draw.rect(screen, (self.color), pygame.Rect(self.position.x, self.position.y, self.size, self.size))
 
-        # Draw line from player showing direction
+        # Draw line from player center showing direction
+        self.center = self.calcCenter()
         pygame.draw.line(screen, (Const.VI_COLOR), (self.center.x, self.center.y),
             (self.center.x + self.velocity.x * Const.VI_LENGTH, self.center.y + self.velocity.y * Const.VI_LENGTH))   # Draw line
 

@@ -23,7 +23,7 @@ clock = pygame.time.Clock()
 player = Player(Vector(Const.SCREEN_SIZE.x / 2, Const.SCREEN_SIZE.y / 2), Const.PLAYER_SPEED, Const.PLAYER_SIZE)
 
 # Initialize enemies
-enemy0 = Enemy(Vector(100, 100), Const.ENEMY_SPEED, Const.ENEMY_SIZE)
+enemies = [ Enemy(Vector(100, 100), Const.ENEMY_SPEED, Const.ENEMY_SIZE) ]
 
 # List of enemies: enemies = []
 # Use a while loop
@@ -41,12 +41,13 @@ while True:
     screen.fill(Const.BACKGROUND_COLOR)
 
     # Draw player
-    player.update()
+    player.update(enemies)
     player.draw(screen)
 
     #Draw enemies
-    enemy0.update()
-    enemy0.draw(screen)
+    for enemy in enemies:
+        enemy.update(player)
+        enemy.draw(screen)
 
     # Refresh screen
     pygame.display.flip()
