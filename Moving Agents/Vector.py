@@ -24,7 +24,7 @@ class Vector:
         return Vector(self.x - other.x, self.y - other.y)
 
     # Multiplies two vectors
-    def __mult__(self, other):
+    def __mul__(self, other):
         return Vector(self.x * other.x, self.y * other.y)
     
     # Returns dot product of two vectors
