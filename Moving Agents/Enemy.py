@@ -16,11 +16,12 @@ class Enemy:
         self.position = position
         self.speed = speed
         self.size = size
-        self.velocity = Vector.zero()
         self.color = Const.ENEMY_COLOR
         self.center = self.calcCenter()
-        self.target = Vector(random.randint(0, Const.DISPLAY_WIDTH), random.randint(0, Const.DISPLAY_HEIGHT))    # Get random initial target
-        self.last_target = 0
+        self.target = Vector(random.randint(0, Const.DISPLAY_WIDTH), 
+                             random.randint(0, Const.DISPLAY_HEIGHT))    # Get random initial target
+        self.velocity = self.target     # Set velocity towards initial target
+        self.last_target = 0    # Used for pygame timer
 
     # Print size, position, velocity, and center
     def __str__(self):
@@ -29,7 +30,7 @@ class Enemy:
 
     # Moves the enemy
     def update(self, player):
-        
+
         # Calculate distance to player (flee range)
         playerDist = self.position - player.position
 
@@ -55,6 +56,9 @@ class Enemy:
         pygame.draw.line(screen, (Const.VI_COLOR), (self.center.x, self.center.y),
             (self.center.x + self.velocity.x * Const.VI_LENGTH, self.center.y + self.velocity.y * Const.VI_LENGTH))   # Draw line
 
+        #  Display target
+        pygame.draw.circle(screen, (255, 0, 0), (self.target.x, self.target.y), 8)
+
     # Calculate the enemy's center
     def calcCenter(self):
         return Vector(self.position.x + 1 * (self.size * 0.5), self.position.y + 1 * (self.size * 0.5))
@@ -62,12 +66,14 @@ class Enemy:
     # Wander behavior
     def wander(self):
         # Set up wander timer so the enemy doesn't change directions every frame
+        # Waits Const.ENEMY_TICKS_TO_WAIT milliseconds before changing directions
         now = pygame.time.get_ticks()
         if (now - self.last_target > Const.ENEMY_TICKS_TO_WAIT):
             self.last_target = now
 
             # Set new target similar to previous move vector
-            self.target = Vector(-self.velocity.y, self.velocity.x) *  Vector(self.velocity.x * random.uniform(-1, 1) * Const.ENEMY_MAX_ROTATION,
-                          self.velocity.y * random.uniform(-1, 1) * Const.ENEMY_MAX_ROTATION)
+            # From Dr. Dana's lecture 1/28/22
+            self.target = Vector(-self.velocity.y, self.velocity.x) * random.uniform(-1, 1) * 20
+
             print(self.target)
         return self.target

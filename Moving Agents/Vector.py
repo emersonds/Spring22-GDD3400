@@ -23,9 +23,14 @@ class Vector:
     def __sub__(self, other):
         return Vector(self.x - other.x, self.y - other.y)
 
-    # Multiplies two vectors
+    # Multiplies a vector by another vector or number
     def __mul__(self, other):
-        return Vector(self.x * other.x, self.y * other.y)
+        # Vector multiplication
+        if (type(other) == Vector):
+            return Vector(self.x * other.x, self.y * other.y)
+        # Number multiplication
+        else:
+            return Vector(self.x * other, self.y * other)
     
     # Returns dot product of two vectors
     def dot(self, other):
