@@ -42,9 +42,9 @@ class Player:
                 closestEnemy = enemy
 
         # Set velocity and move player
-        #self.velocity = closestEnemy.position - self.position
+        self.velocity = closestEnemy.position - self.position
         self.velocity = self.velocity.normalize()           # Normalize velocity
-        self.position += self.velocity.scale(self.speed)    # Scale it by a speed factor
+        self.position += self.velocity * self.speed    # Scale it by a speed factor
         
     # Draws the player on screen
     def draw(self, screen):

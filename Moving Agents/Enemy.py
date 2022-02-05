@@ -35,7 +35,7 @@ class Enemy:
         playerDist = self.position - player.position
 
         # Flee if player is within range
-        if (playerDist.length() < 10):
+        if (playerDist.length() < Const.ENEMY_FLEE_RANGE):
             self.velocity = playerDist
         # Wander if player is not in range
         else:
@@ -43,7 +43,7 @@ class Enemy:
 
         # Normalize velocity and move enemy
         self.velocity = self.velocity.normalize()           # Normalize velocity
-        self.position += self.velocity.scale(self.speed)    # Scale it by a speed factor
+        self.position += self.velocity * self.speed   # Scale it by a speed factor
         
     # Draws the enemy on screen
     def draw(self, screen):
@@ -55,9 +55,6 @@ class Enemy:
         self.center = self.calcCenter()
         pygame.draw.line(screen, (Const.VI_COLOR), (self.center.x, self.center.y),
             (self.center.x + self.velocity.x * Const.VI_LENGTH, self.center.y + self.velocity.y * Const.VI_LENGTH))   # Draw line
-
-        #  Display target
-        pygame.draw.circle(screen, (255, 0, 0), (self.target.x, self.target.y), 8)
 
     # Calculate the enemy's center
     def calcCenter(self):
@@ -73,7 +70,7 @@ class Enemy:
 
             # Set new target similar to previous move vector
             # From Dr. Dana's lecture 1/28/22
-            self.target = Vector(-self.velocity.y, self.velocity.x) * random.uniform(-1, 1) * 20
+            self.target = Vector(-self.velocity.y, self.velocity.x) * random.uniform(-1, 1) * 0.2
 
             print(self.target)
-        return self.target
+        return self.velocity + self.target
