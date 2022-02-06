@@ -20,14 +20,16 @@ screen = pygame.display.set_mode((Const.DISPLAY_WIDTH, Const.DISPLAY_HEIGHT))
 clock = pygame.time.Clock()
 
 # Initialize player
-player = Player(Vector(Const.SCREEN_SIZE.x / 2, Const.SCREEN_SIZE.y / 2), Const.PLAYER_SPEED, Const.PLAYER_SIZE)
+player = Player(Vector(Const.SCREEN_SIZE.x * 0.5, Const.SCREEN_SIZE.y * 0.5), Const.PLAYER_SPEED, Const.PLAYER_SIZE)
 
 # Initialize enemies
-enemies = [ Enemy(Vector(100, 100), Const.ENEMY_SPEED, Const.ENEMY_SIZE) ]
+enemies = []
 
-# List of enemies: enemies = []
-# Use a while loop
-# i = 0; while len(enemies) < 10: enemies.append(Enemy(pos, speed, size))
+# Add 10 enemies randomly around the world
+i = 0
+while len(enemies) < Const.WORLD_MAX_ENEMIES:
+   enemies.append(Enemy(Vector(random.uniform(0, Const.DISPLAY_WIDTH - Const.ENEMY_SIZE),
+                                random.uniform(0, Const.DISPLAY_HEIGHT - Const.ENEMY_SIZE)), Const.ENEMY_SPEED, Const.ENEMY_SIZE))
 
 # Gameplay loop
 while True:

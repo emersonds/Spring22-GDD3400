@@ -19,12 +19,14 @@ class Enemy(Agent):
                              random.randint(0, Const.DISPLAY_HEIGHT))    # Get random initial target
         self.velocity = self.target     # Set velocity towards initial target
         self.last_target = 0    # Used for pygame timer
-        self.tagged = False
+        self.tagged = False     # Used for movement checking
 
+        # Call parent constructor
         super().__init__(position, speed, size)
 
     # Moves the enemy
     def update(self, player, screen):
+        # Check if tagged, wander/flee if not tagged
         if (self.tagged == False):
             # Calculate distance to player (flee range)
             playerDist = self.position - player.position
@@ -37,6 +39,7 @@ class Enemy(Agent):
             # Wander if player is not in range
             else:
                 self.velocity = self.wander()
+        # Stand in place if tagged
         else:
             self.velocity = Vector.zero()
 
@@ -45,6 +48,7 @@ class Enemy(Agent):
         if (self.collided == True):
             self.tagged = True
 
+        # Call parent update
         super().update()
 
     # Wander behavior
