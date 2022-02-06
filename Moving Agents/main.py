@@ -41,12 +41,12 @@ while True:
     screen.fill(Const.BACKGROUND_COLOR)
 
     # Draw player
-    player.update(enemies)
+    player.update(enemies, screen)
     player.draw(screen)
 
     #Draw enemies
     for enemy in enemies:
-        enemy.update(player)
+        enemy.update(player, screen)
         enemy.draw(screen)
 
     # Refresh screen

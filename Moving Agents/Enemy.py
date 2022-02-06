@@ -23,7 +23,7 @@ class Enemy(Agent):
         super().__init__(position, speed, size)
 
     # Moves the enemy
-    def update(self, player):
+    def update(self, player, screen):
 
         # Calculate distance to player (flee range)
         playerDist = self.position - player.position
@@ -31,13 +31,13 @@ class Enemy(Agent):
         # Flee if player is within range
         if (playerDist.length() < Const.ENEMY_FLEE_RANGE):
             self.velocity = playerDist
+            self.fleeing = True
+            self.drawSeekFlee(screen, player)
         # Wander if player is not in range
         else:
             self.velocity = self.wander()
 
-        # Normalize velocity and move enemy
-        self.velocity = self.velocity.normalize()           # Normalize velocity
-        self.position += self.velocity * self.speed   # Scale it by a speed factor
+        self.setVelocity()
 
     # Wander behavior
     def wander(self):

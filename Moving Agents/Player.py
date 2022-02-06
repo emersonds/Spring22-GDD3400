@@ -21,19 +21,17 @@ class Player(Agent):
         super().__init__(position, speed, size)
 
     # Moves the player
-    def update(self, enemies):
-
-        # Initialize movement vector
-        self.velocity = Vector.zero()                       # Zero out velocity so the player doesn't slide in between movements.
+    def update(self, enemies, screen):
 
         # Target random enemy
         if (self.targetSelected == False):
             self.setTarget(enemies)
         else:
             # Set velocity and move player
+            self.seeking = True
+            self.drawSeekFlee(screen, self.target)
             self.velocity = self.target.position - self.position
-            self.velocity = self.velocity.normalize()           # Normalize velocity
-            self.position += self.velocity * self.speed    # Scale it by a speed factor
+            self.setVelocity()
     
     # Set random target in enemies list
     def setTarget(self, enemies):
