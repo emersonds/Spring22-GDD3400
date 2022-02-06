@@ -18,15 +18,17 @@ class Agent:
         self.center = self.calcCenter()
         self.seeking = False
         self.fleeing = False
+        self.rect = pygame.Rect(self.position.x, self.position.y, self.size, self.size)
     
     def __str__(self):
         print("Size:", str(self.size), "\nPosition:", str(self.position), "\nVelocity:", str(self.velocity),
             "\nCenter:", str(self.center))
 
-    def setVelocity(self):
+    def update(self):
         # Normalize velocity and move enemy
         self.velocity = self.velocity.normalize()           # Normalize velocity
         self.position += self.velocity * self.speed   # Scale it by a speed factor
+        self.rect = pygame.Rect(self.position.x, self.position.y, self.size, self.size)
 
     # Draw the agent and their velocity
     def draw(self, screen):
@@ -48,3 +50,6 @@ class Agent:
     # Calculate the player's center
     def calcCenter(self):
         return Vector(self.position.x + 1 * (self.size / 2), self.position.y + 1 * (self.size / 2))
+
+    def checkCollision(self, other):
+        return (pygame.Rect.colliderect(self.rect, other.rect))

@@ -23,7 +23,7 @@ clock = pygame.time.Clock()
 player = Player(Vector(Const.SCREEN_SIZE.x / 2, Const.SCREEN_SIZE.y / 2), Const.PLAYER_SPEED, Const.PLAYER_SIZE)
 
 # Initialize enemies
-enemies = [ Enemy(Vector(100, 100), Const.ENEMY_SPEED, Const.ENEMY_SIZE) ]
+enemies = [ Enemy(Vector(200, 300), Const.ENEMY_SPEED, Const.ENEMY_SIZE) ]
 
 # List of enemies: enemies = []
 # Use a while loop
