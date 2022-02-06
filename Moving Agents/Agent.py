@@ -30,6 +30,12 @@ class Agent:
         self.position += self.velocity * self.speed   # Scale it by a speed factor
         self.rect = pygame.Rect(self.position.x, self.position.y, self.size, self.size)
 
+        # Clamp agent into world bounds
+        if (self.position.x < 0): self.position.x = 0
+        if (self.position.x + self.size > Const.DISPLAY_WIDTH): self.position.x = Const.DISPLAY_WIDTH - self.size
+        if (self.position.y < 0): self.position.y = 0
+        if (self.position.y + self.size > Const.DISPLAY_HEIGHT): self.position.y = Const.DISPLAY_HEIGHT - self.size
+
     # Draw the agent and their velocity
     def draw(self, screen):
          
