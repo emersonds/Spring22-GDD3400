@@ -2,8 +2,6 @@
 #   Author: Dylan Emerson
 #   File: Dog.py
 
-import pygame
-import math
 import random
 
 import Constants as Const
@@ -14,7 +12,7 @@ class Dog(Agent):
 
     # Player constructor
     def __init__(self, position, speed, size):
-        self.color = Const.PLAYER_COLOR
+        self.color = Const.DOG_COLOR
         self.velocity = Vector.zero()
         self.targetSelected = False     # Used for setting targets
         self.collided = False   # Used for changing targets
@@ -67,6 +65,6 @@ class Dog(Agent):
             print("No targets remaining.")
 
     # Calculate direction and applied force
-    def setForce(self)
+    def setForce(self):
         self.direction = (self.target.position - self.position).normalize()
         self.appliedForce = self.direction * Const.DOG_DIRECTION_WEIGHT

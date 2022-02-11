@@ -3,8 +3,6 @@
 #   File: Agent.py
 
 import pygame
-import math
-import random
 
 import Constants as Const 
 from Vector import *
