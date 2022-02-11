@@ -6,6 +6,7 @@ import pygame
 import random
 
 import Constants as Const
+import PygameTime as pt
 from Agent import Agent
 from Vector import *
 
@@ -25,19 +26,19 @@ class Sheep(Agent):
 
     # Moves the enemy
     def update(self, dog, screen):
+
+        # Get direction to player/flee vector
+        dogDist = self.position - dog.position
+
         # Check if tagged, wander/flee if not tagged
         if (self.tagged == False):
-            # Calculate distance to player (flee range)
-            dogDist = self.position - dog.position
-
             # Flee if player is within range
             if (dogDist.length() < Const.SHEEP_FLEE_RANGE):
-                self.velocity = dogDist
-                self.fleeing = True
+                self.velocity = self.flee(dogDist)
                 self.drawSeekFlee(screen, dog)
             # Wander if player is not in range
             else:
-                self.velocity = self.wander()
+                self.velocity += self.wander()
         # Stand in place if tagged
         else:
             self.velocity = Vector.zero()
@@ -61,4 +62,13 @@ class Sheep(Agent):
             # Set new target similar to previous move vector
             # From Dr. Dana's lecture 1/28/22
             self.target = Vector(-self.velocity.y, self.velocity.x) * random.uniform(-1, 1) * Const.SHEEP_ROTATION_SCALAR
-        return self.velocity + self.target
+        self.appliedForce = self.target * Const.SHEEP_WANDER_WEIGHT
+        return self.appliedForce.normalize() * pt.deltaTime * Const.SHEEP_SPEED
+
+    # Flee behavior
+    def flee(self, dogDist):
+        # Calculate distance to player (flee range)
+
+        self.fleeing = True
+        self.appliedForce = dogDist * Const.SHEEP_FLEE_WEIGHT
+        return self.appliedForce.normalize() * pt.deltaTime * Const.SHEEP_SPEED
