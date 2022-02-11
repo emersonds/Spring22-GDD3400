@@ -32,7 +32,7 @@ class Dog(Agent):
             # Set velocity and move player
             self.seeking = True
             self.drawSeekFlee(screen, self.target)
-            self.velocity = self.setForce()
+            self.velocity += self.setForce()
         
         # Check for collisions
         self.collided = self.checkCollision(self.target)

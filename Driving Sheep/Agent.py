@@ -27,13 +27,10 @@ class Agent:
         self.velocity = self.velocity.normalize()           # Normalize velocity
         self.position += self.velocity * self.speed   # Move agent by velocity * speed
         # update agent rect
-        self.rect = pygame.Rect(self.position.x, self.position.y, self.size, self.size)
+        self.updateRect()
 
-        # Clamp agent into world bounds
-        if (self.position.x < 0): self.position.x = 0
-        if (self.position.x + self.size > Const.DISPLAY_WIDTH): self.position.x = Const.DISPLAY_WIDTH - self.size
-        if (self.position.y < 0): self.position.y = 0
-        if (self.position.y + self.size > Const.DISPLAY_HEIGHT): self.position.y = Const.DISPLAY_HEIGHT - self.size
+        # Keep agent in world bounds and apply boundary force
+        self.checkBoundaries()
 
     # Draw the agent and their velocity
     def draw(self, screen):
@@ -62,3 +59,14 @@ class Agent:
     # Returns true if a collision with other is detected
     def checkCollision(self, other):
         return (pygame.Rect.colliderect(self.rect, other.rect))
+
+    def updateRect(self):
+        self.rect = pygame.Rect(self.position.x, self.position.y, self.size, self.size)
+
+    def checkBoundaries(self):
+
+        # Clamp agent into world bounds
+        if (self.position.x < 0): self.position.x = 0
+        if (self.position.x + self.size > Const.DISPLAY_WIDTH): self.position.x = Const.DISPLAY_WIDTH - self.size
+        if (self.position.y < 0): self.position.y = 0
+        if (self.position.y + self.size > Const.DISPLAY_HEIGHT): self.position.y = Const.DISPLAY_HEIGHT - self.size
