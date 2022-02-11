@@ -1,6 +1,6 @@
 #   HW: Moving Agents
 #   Author: Dylan Emerson
-#   File: Player.py
+#   File: Dog.py
 
 import pygame
 import math
@@ -8,10 +8,9 @@ import random
 
 import Constants as Const
 from Agent import Agent
-from Enemy import *
 from Vector import *
 
-class Player(Agent):
+class Dog(Agent):
 
     # Player constructor
     def __init__(self, position, speed, size):
@@ -24,40 +23,40 @@ class Player(Agent):
         super().__init__(position, speed, size)
 
     # Moves the player
-    def update(self, enemies, screen):
+    def update(self, sheepList, screen):
 
         # Target random enemy
         if (self.targetSelected == False):
-            self.setTarget(enemies)
+            self.setTarget(sheepList)
         # Seek target enemy
         else:
             # Set velocity and move player
             self.seeking = True
             self.drawSeekFlee(screen, self.target)
-            self.velocity = self.target.position - self.position
+            self.setForce()
         
         # Check for collisions
         self.collided = self.checkCollision(self.target)
         # Change targets on collision with target
         if (self.collided == True):
-            self.setTarget(enemies)
+            self.setTarget(sheepList)
 
         # Call parent update
         super().update()
     
     # Set random target in enemies list
-    def setTarget(self, enemies):
+    def setTarget(self, sheepList):
         # If no target is found, set target to self to freeze movement
         self.target = self
 
         # Find a random target
         i = 0
-        while i < len(enemies):
-            randIndex = random.randint(0, len(enemies) - 1)
+        while i < len(sheepList):
+            randIndex = random.randint(0, len(sheepList) - 1)
             # Check if potential target has been tagged
-            if (enemies[randIndex].tagged == False):
+            if (sheepList[randIndex].tagged == False):
                 # If random target hasn't been tagged, set target
-                self.target = enemies[randIndex]
+                self.target = sheepList[randIndex]
                 self.targetSelected = True
                 break
             # Loop until a target has been set or there are no targets remaining
@@ -67,3 +66,7 @@ class Player(Agent):
         if (self.target == self):
             print("No targets remaining.")
 
+    # Calculate direction and applied force
+    def setForce(self)
+        self.direction = (self.target.position - self.position).normalize()
+        self.appliedForce = self.direction * Const.DOG_DIRECTION_WEIGHT
