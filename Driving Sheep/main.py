@@ -8,6 +8,7 @@ from pygame.locals import *
 
 # Import custom classes
 import Constants as Const       # "Constants" is too much to type a lot, so refer to it as Const
+import PygameTime as pt
 from Sheep import *
 from Dog import *
 from Vector import *
@@ -17,7 +18,6 @@ pygame.init()
 
 # Display mode properties
 screen = pygame.display.set_mode((Const.DISPLAY_WIDTH, Const.DISPLAY_HEIGHT))
-clock = pygame.time.Clock()
 
 # Initialize dog
 dog = Dog(Vector(Const.SCREEN_SIZE.x * 0.5, Const.SCREEN_SIZE.y * 0.5), Const.DOG_SPEED, Const.DOG_SIZE)
@@ -53,4 +53,4 @@ while True:
 
     # Refresh screen
     pygame.display.flip()
-    clock.tick(Const.FRAME_RATE)
+    pt.clock.tick(Const.FRAME_RATE)

@@ -4,6 +4,8 @@
 
 import pygame
 
-class PygameTime:
-    # Calculate delta time, create clock, etc.
-    pass
+import Constants as Const
+
+clock = pygame.time.Clock()
+
+deltaTime = clock.tick(Const.FRAME_RATE) / 1000

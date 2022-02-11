@@ -5,6 +5,7 @@
 import random
 
 import Constants as Const
+import PygameTime as pt
 from Agent import Agent
 from Vector import *
 
@@ -31,7 +32,7 @@ class Dog(Agent):
             # Set velocity and move player
             self.seeking = True
             self.drawSeekFlee(screen, self.target)
-            self.setForce()
+            self.velocity = self.setForce()
         
         # Check for collisions
         self.collided = self.checkCollision(self.target)
@@ -68,3 +69,4 @@ class Dog(Agent):
     def setForce(self):
         self.direction = (self.target.position - self.position).normalize()
         self.appliedForce = self.direction * Const.DOG_DIRECTION_WEIGHT
+        return self.appliedForce.normalize() * pt.deltaTime * Const.DOG_SPEED

@@ -4,7 +4,7 @@
 
 import pygame
 
-import Constants as Const 
+import Constants as Const
 from Vector import *
 
 class Agent:
