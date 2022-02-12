@@ -20,7 +20,7 @@ pygame.init()
 screen = pygame.display.set_mode((Const.DISPLAY_WIDTH, Const.DISPLAY_HEIGHT))
 
 # Initialize dog
-dog = Dog(Vector(Const.SCREEN_SIZE.x * 0.5, Const.SCREEN_SIZE.y * 0.5), Const.DOG_SPEED, Const.DOG_SIZE)
+dog = Dog(Vector(Const.SCREEN_SIZE.x * 0.5, Const.SCREEN_SIZE.y * 0.5), Const.DOG_SPEED, Vector(Const.AGENT_WIDTH, Const.AGENT_HEIGHT))
 
 # Initialize enemies
 sheepList = []
@@ -28,8 +28,8 @@ sheepList = []
 # Add 10 enemies randomly around the world
 i = 0
 while len(sheepList) < Const.WORLD_MAX_SHEEP:
-   sheepList.append(Sheep(Vector(random.uniform(0, Const.DISPLAY_WIDTH - Const.SHEEP_SIZE),
-                                random.uniform(0, Const.DISPLAY_HEIGHT - Const.SHEEP_SIZE)), Const.SHEEP_SPEED, Const.SHEEP_SIZE))
+   sheepList.append(Sheep(Vector(random.uniform(0, Const.DISPLAY_WIDTH - Const.AGENT_HEIGHT),
+                                random.uniform(0, Const.DISPLAY_HEIGHT - Const.AGENT_HEIGHT)), Const.SHEEP_SPEED, Vector(Const.AGENT_WIDTH, Const.AGENT_HEIGHT)))
 
 # Gameplay loop
 while True:

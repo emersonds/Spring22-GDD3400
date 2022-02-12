@@ -16,7 +16,7 @@ class Agent:
         self.center = self.calcCenter()
         self.seeking = False
         self.fleeing = False
-        self.rect = pygame.Rect(self.position.x, self.position.y, self.size, self.size)
+        self.rect = pygame.Rect(self.position.x, self.position.y, self.size.x, self.size.y)
     
     def __str__(self):
         print("Size:", str(self.size), "\nPosition:", str(self.position), "\nVelocity:", str(self.velocity),
@@ -36,7 +36,7 @@ class Agent:
     def draw(self, screen):
          
         # Draw agent
-        pygame.draw.rect(screen, (self.color), pygame.Rect(self.position.x, self.position.y, self.size, self.size))
+        pygame.draw.rect(screen, (self.color), self.rect)
 
         # Get agent center
         self.center = self.calcCenter()
@@ -54,19 +54,22 @@ class Agent:
     
     # Calculate the agent's center
     def calcCenter(self):
-        return Vector(self.position.x + 1 * (self.size * 0.5), self.position.y + 1 * (self.size * 0.5))
+        return self.position + Vector(1, 1) * (self.size * 0.5)
 
     # Returns true if a collision with other is detected
     def checkCollision(self, other):
         return (pygame.Rect.colliderect(self.rect, other.rect))
 
     def updateRect(self):
-        self.rect = pygame.Rect(self.position.x, self.position.y, self.size, self.size)
+        self.rect = pygame.Rect(self.position.x, self.position.y, self.size.x, self.size.y)
 
     def checkBoundaries(self):
 
         # Clamp agent into world bounds
         if (self.position.x < 0): self.position.x = 0
-        if (self.position.x + self.size > Const.DISPLAY_WIDTH): self.position.x = Const.DISPLAY_WIDTH - self.size
+        if (self.position.x + self.size.x > Const.DISPLAY_WIDTH): self.position.x = Const.DISPLAY_WIDTH - self.size.x
         if (self.position.y < 0): self.position.y = 0
-        if (self.position.y + self.size > Const.DISPLAY_HEIGHT): self.position.y = Const.DISPLAY_HEIGHT - self.size
+        if (self.position.y + self.size.y > Const.DISPLAY_HEIGHT): self.position.y = Const.DISPLAY_HEIGHT - self.size.y
+
+        # If agent is getting too close to a boundary, flee from it
+        

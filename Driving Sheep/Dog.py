@@ -68,5 +68,5 @@ class Dog(Agent):
     # Calculate direction and applied force
     def setForce(self):
         self.direction = (self.target.position - self.position).normalize()
-        self.appliedForce = self.direction * Const.DOG_DIRECTION_WEIGHT
+        self.appliedForce = self.direction * Const.DOG_SEEK_WEIGHT
         return self.appliedForce.normalize() * pt.deltaTime * Const.DOG_SPEED
