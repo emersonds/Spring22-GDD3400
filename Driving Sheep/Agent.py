@@ -3,6 +3,7 @@
 #   File: Agent.py
 
 import pygame
+import math
 
 import Constants as Const
 from Vector import *
@@ -14,6 +15,7 @@ class Agent:
         self.speed = speed
         self.size = size
         self.center = self.calcCenter()
+        #self.orientation = math.atan2(-self.velocity.x, self.velocity.y)
         self.seeking = False
         self.fleeing = False
         self.rect = pygame.Rect(self.position.x, self.position.y, self.size.x, self.size.y)
@@ -26,6 +28,10 @@ class Agent:
         # Normalize velocity and move agent
         self.velocity = self.velocity.normalize()           # Normalize velocity
         self.position += self.velocity * self.speed   # Move agent by velocity * speed
+
+        # Rotate the agent
+        #self.orientation += math.atan2(-self.velocity.x, self.velocity.y)
+
         # update agent rect
         self.updateRect()
 
