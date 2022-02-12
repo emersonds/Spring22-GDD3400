@@ -47,10 +47,8 @@ class Agent:
         
         # Draw agent
         self.surf = pygame.transform.rotate(self.image, self.orientation)
-        width = self.image.get_width()
-        height = self.image.get_height()
-        self.upperLeft = (width * 0.5, height * 0.5)
-        self.surf.blit(self.image, self.upperLeft)
+        self.upperLeft = self.rect.center
+        screen.blit(self.surf, [self.upperLeft[0], self.upperLeft[1]])
 
         # Get agent center
         self.center = self.calcCenter()
