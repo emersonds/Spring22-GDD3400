@@ -13,16 +13,17 @@ from Vector import *
 class Sheep(Agent):
 
     # Enemy constructor
-    def __init__(self, position, speed, size):
+    def __init__(self, position, speed, size, sprite):
         self.color = Const.SHEEP_COLOR
         self.target = Vector(random.randint(0, Const.DISPLAY_WIDTH), 
                              random.randint(0, Const.DISPLAY_HEIGHT))    # Get random initial target
         self.velocity = self.target     # Set velocity towards initial target
         self.last_target = 0    # Used for pygame timer
         self.tagged = False     # Used for movement checking
+        self.image = sprite
 
         # Call parent constructor
-        super().__init__(position, speed, size)
+        super().__init__(position, speed, size, sprite)
 
     # Moves the enemy
     def update(self, dog, screen):

@@ -10,15 +10,19 @@ from Vector import *
 
 class Agent:
     # Constructor
-    def __init__(self, position, speed, size):
+    def __init__(self, position, speed, size, image):
+        super().__init__()
         self.position = position
         self.speed = speed
         self.size = size
+        self.surf = pygame.Surface([size.x, size.y])
+        self.image = pygame.image.load(image)
         self.center = self.calcCenter()
-        #self.orientation = math.atan2(-self.velocity.x, self.velocity.y)
+        self.orientation = 0
         self.seeking = False
         self.fleeing = False
-        self.rect = pygame.Rect(self.position.x, self.position.y, self.size.x, self.size.y)
+        self.rect = self.image.get_rect()
+        self.rect.center = (self.position.x, self.position.y)
     
     def __str__(self):
         print("Size:", str(self.size), "\nPosition:", str(self.position), "\nVelocity:", str(self.velocity),
@@ -40,9 +44,13 @@ class Agent:
 
     # Draw the agent and their velocity
     def draw(self, screen):
-         
+        
         # Draw agent
-        pygame.draw.rect(screen, (self.color), self.rect)
+        self.surf = pygame.transform.rotate(self.image, self.orientation)
+        width = self.image.get_width()
+        height = self.image.get_height()
+        self.upperLeft = (width * 0.5, height * 0.5)
+        self.surf.blit(self.image, self.upperLeft)
 
         # Get agent center
         self.center = self.calcCenter()
@@ -68,6 +76,7 @@ class Agent:
 
     def updateRect(self):
         self.rect = pygame.Rect(self.position.x, self.position.y, self.size.x, self.size.y)
+        self.rect.center = (self.position.x, self.position.y)
 
     def checkBoundaries(self):
 

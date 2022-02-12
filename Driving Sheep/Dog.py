@@ -12,14 +12,14 @@ from Vector import *
 class Dog(Agent):
 
     # Player constructor
-    def __init__(self, position, speed, size):
+    def __init__(self, position, speed, size, sprite):
         self.color = Const.DOG_COLOR
         self.velocity = Vector.zero()
         self.targetSelected = False     # Used for setting targets
         self.collided = False   # Used for changing targets
 
         # Call parent constructor
-        super().__init__(position, speed, size)
+        super().__init__(position, speed, size, sprite)
 
     # Moves the player
     def update(self, sheepList, screen):
