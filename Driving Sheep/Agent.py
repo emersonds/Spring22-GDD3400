@@ -50,10 +50,15 @@ class Agent:
     def draw(self, screen):
         
         # Draw agent
-        self.upperLeft = self.rect.center
+        self.upperLeft = self.rect.topleft
         self.surf = pygame.transform.rotate(self.image, self.orientation)
         screen.blit(self.surf, [self.upperLeft[0], self.upperLeft[1]])
         self.rectCenter = self.calcRectCenter()
+        
+        # Draw bounding rect
+        boundingRect = self.surf.get_bounding_rect()
+        boundingRect = boundingRect.move(self.upperLeft)
+        pygame.draw.rect(screen, (0, 0, 0, 0), boundingRect, 1)
 
         # Get agent center
         self.center = self.calcCenter()
