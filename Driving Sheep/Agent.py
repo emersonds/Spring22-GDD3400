@@ -22,7 +22,8 @@ class Agent:
         self.seeking = False
         self.fleeing = False
         self.rect = self.image.get_rect()
-        self.rect.center = (self.position.x, self.position.y)
+        self.upperLeft = self.rect.center
+        self.rectCenter = self.calcRectCenter()
     
     def __str__(self):
         print("Size:", str(self.size), "\nPosition:", str(self.position), "\nVelocity:", str(self.velocity),

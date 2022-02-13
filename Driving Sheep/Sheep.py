@@ -35,7 +35,7 @@ class Sheep(Agent):
         if (self.tagged == False):
             # Flee if player is within range
             if (dogDist.length() < Const.SHEEP_FLEE_RANGE):
-                self.velocity = self.flee(dogDist)
+                self.velocity += self.flee(dogDist)
                 self.drawSeekFlee(screen, dog)
             # Wander if player is not in range
             else:
