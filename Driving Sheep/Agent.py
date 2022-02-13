@@ -34,7 +34,10 @@ class Agent:
         self.position += self.velocity * self.speed   # Move agent by velocity * speed
 
         # Rotate the agent
-        #self.orientation += math.atan2(-self.velocity.x, self.velocity.y)
+        self.orientation = math.atan2(self.velocity.x, self.velocity.y)
+        self.orientation = math.degrees(self.orientation)
+        self.orientation += 180
+        print("Orientation:", str(self.orientation))
 
         # update agent rect
         self.updateRect()
@@ -46,27 +49,32 @@ class Agent:
     def draw(self, screen):
         
         # Draw agent
-        self.surf = pygame.transform.rotate(self.image, self.orientation)
         self.upperLeft = self.rect.center
+        self.surf = pygame.transform.rotate(self.image, self.orientation)
         screen.blit(self.surf, [self.upperLeft[0], self.upperLeft[1]])
+        self.rectCenter = self.calcRectCenter()
 
         # Get agent center
         self.center = self.calcCenter()
         # Draw line from agent center showing their velocity
-        pygame.draw.line(screen, (Const.DEBUG_VELOCITY_COLOR), (self.center.x, self.center.y),
-            (self.center.x + self.velocity.x * Const.DEBUG_VELOCITY_LENGTH, self.center.y + self.velocity.y * Const.DEBUG_VELOCITY_LENGTH))
+        pygame.draw.line(screen, (Const.DEBUG_VELOCITY_COLOR), (self.rectCenter.x, self.rectCenter.y),
+            (self.rectCenter.x + self.velocity.x * Const.DEBUG_VELOCITY_LENGTH, self.rectCenter.y + self.velocity.y * Const.DEBUG_VELOCITY_LENGTH))
 
     # Draw a line to another agent that self is seeking/fleeing from
     def drawSeekFlee(self, screen, lineTarget):
         # Check if seeking or fleeing
         if (self.seeking == True or self.fleeing == True):
             # Draw seek/flee line
-            pygame.draw.line(screen, (Const.DEBUG_SEEKFLEE_COLOR), (self.center.x, self.center.y),
-            (lineTarget.center.x, lineTarget.center.y))
+            pygame.draw.line(screen, (Const.DEBUG_SEEKFLEE_COLOR), (self.rectCenter.x, self.rectCenter.y),
+            (lineTarget.rectCenter.x, lineTarget.rectCenter.y))
     
     # Calculate the agent's center
     def calcCenter(self):
         return self.position + Vector(1, 1) * (self.size * 0.5)
+
+    def calcRectCenter(self):
+        center = self.surf.get_bounding_rect().center
+        return Vector(center[0] + self.upperLeft[0], center[1] + self.upperLeft[1])
 
     # Returns true if a collision with other is detected
     def checkCollision(self, other):
@@ -74,7 +82,6 @@ class Agent:
 
     def updateRect(self):
         self.rect = pygame.Rect(self.position.x, self.position.y, self.size.x, self.size.y)
-        self.rect.center = (self.position.x, self.position.y)
 
     def checkBoundaries(self):
 
