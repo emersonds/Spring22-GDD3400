@@ -6,6 +6,7 @@ import pygame
 import math
 
 import Constants as Const
+import PygameTime as pt
 from Vector import *
 
 class Agent:
@@ -42,9 +43,6 @@ class Agent:
         # update agent rect
         self.updateRect()
 
-        # Keep agent in world bounds and apply boundary force
-        self.checkBoundaries()
-
     # Draw the agent and their velocity
     def draw(self, screen):
         
@@ -64,6 +62,9 @@ class Agent:
         # Draw line from agent center showing their velocity
         pygame.draw.line(screen, (Const.DEBUG_VELOCITY_COLOR), (self.rectCenter.x, self.rectCenter.y),
             (self.rectCenter.x + self.velocity.x * Const.DEBUG_VELOCITY_LENGTH, self.rectCenter.y + self.velocity.y * Const.DEBUG_VELOCITY_LENGTH))
+
+        # Keep agent in world bounds and apply boundary force
+        self.checkBoundaries(screen)
 
     # Draw a line to another agent that self is seeking/fleeing from
     def drawSeekFlee(self, screen, lineTarget):
@@ -88,7 +89,7 @@ class Agent:
     def updateRect(self):
         self.rect = pygame.Rect(self.position.x, self.position.y, self.size.x, self.size.y)
 
-    def checkBoundaries(self):
+    def checkBoundaries(self, screen):
 
         # Clamp agent into world bounds
         if (self.position.x < 0): self.position.x = 0   # Left
@@ -98,10 +99,18 @@ class Agent:
 
         # If agent is getting too close to a boundary, push agent away
         if (self.rect.top < Const.WORLD_MIN_DISTANCE):  # Top
-            self.velocity.y += Const.WORLD_BOUNDARY_FORCE
+            self.velocity.y += Const.WORLD_BOUNDARY_FORCE * self.speed * pt.deltaTime
+            pygame.draw.line(screen, Const.DEBUG_SEEKFLEE_COLOR, (self.rect.centerx, 0),
+                            self.rect.center)
         if (self.rect.bottom > (Const.DISPLAY_HEIGHT - Const.WORLD_MIN_DISTANCE)):  # Bottom
-            self.velocity.y += -Const.WORLD_BOUNDARY_FORCE
+            self.velocity.y += -Const.WORLD_BOUNDARY_FORCE * self.speed * pt.deltaTime
+            pygame.draw.line(screen, Const.DEBUG_SEEKFLEE_COLOR, (self.rect.centerx, Const.DISPLAY_HEIGHT),
+                            self.rect.center)
         if (self.rect.left < Const.WORLD_MIN_DISTANCE):  # Left
-            self.velocity.x += Const.WORLD_BOUNDARY_FORCE
+            self.velocity.x += Const.WORLD_BOUNDARY_FORCE * self.speed * pt.deltaTime
+            pygame.draw.line(screen, Const.DEBUG_SEEKFLEE_COLOR, (0, self.rect.centery),
+                            self.rect.center)
         if (self.rect.right > (Const.DISPLAY_WIDTH - Const.WORLD_MIN_DISTANCE)):  # Right
-            self.velocity.x += -Const.WORLD_BOUNDARY_FORCE
+            self.velocity.x += -Const.WORLD_BOUNDARY_FORCE * self.speed * pt.deltaTime
+            pygame.draw.line(screen, Const.DEBUG_SEEKFLEE_COLOR, (Const.DISPLAY_WIDTH, self.rect.centery),
+                            self.rect.center)
