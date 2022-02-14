@@ -98,19 +98,26 @@ class Agent:
         if (self.position.y + self.size.y > Const.DISPLAY_HEIGHT): self.position.y = Const.DISPLAY_HEIGHT - self.size.y # Bottom
 
         # If agent is getting too close to a boundary, push agent away
-        if (self.rect.top < Const.WORLD_MIN_DISTANCE):  # Top
+        # Top
+        if (self.rect.top < Const.WORLD_MIN_DISTANCE):  
             self.velocity.y += Const.WORLD_BOUNDARY_FORCE * self.speed * pt.deltaTime
             pygame.draw.line(screen, Const.DEBUG_SEEKFLEE_COLOR, (self.rect.centerx, 0),
                             self.rect.center)
-        if (self.rect.bottom > (Const.DISPLAY_HEIGHT - Const.WORLD_MIN_DISTANCE)):  # Bottom
+
+        # Bottom
+        if (self.rect.bottom > (Const.DISPLAY_HEIGHT - Const.WORLD_MIN_DISTANCE)):  
             self.velocity.y += -Const.WORLD_BOUNDARY_FORCE * self.speed * pt.deltaTime
             pygame.draw.line(screen, Const.DEBUG_SEEKFLEE_COLOR, (self.rect.centerx, Const.DISPLAY_HEIGHT),
                             self.rect.center)
-        if (self.rect.left < Const.WORLD_MIN_DISTANCE):  # Left
+
+        # Left
+        if (self.rect.left < Const.WORLD_MIN_DISTANCE):  
             self.velocity.x += Const.WORLD_BOUNDARY_FORCE * self.speed * pt.deltaTime
             pygame.draw.line(screen, Const.DEBUG_SEEKFLEE_COLOR, (0, self.rect.centery),
                             self.rect.center)
-        if (self.rect.right > (Const.DISPLAY_WIDTH - Const.WORLD_MIN_DISTANCE)):  # Right
+
+        # Right                    
+        if (self.rect.right > (Const.DISPLAY_WIDTH - Const.WORLD_MIN_DISTANCE)):  
             self.velocity.x += -Const.WORLD_BOUNDARY_FORCE * self.speed * pt.deltaTime
             pygame.draw.line(screen, Const.DEBUG_SEEKFLEE_COLOR, (Const.DISPLAY_WIDTH, self.rect.centery),
                             self.rect.center)
