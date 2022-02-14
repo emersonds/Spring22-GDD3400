@@ -13,6 +13,8 @@ FRAME_RATE = 60
 
 # World constants
 WORLD_MAX_SHEEP = 10
+WORLD_MIN_DISTANCE = 25
+WORLD_BOUNDARY_FORCE = 0.8
 
 # Agent constants
 AGENT_WIDTH = 16

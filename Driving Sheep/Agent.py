@@ -22,7 +22,7 @@ class Agent:
         self.seeking = False
         self.fleeing = False
         self.rect = self.image.get_rect()
-        self.upperLeft = self.rect.center
+        self.upperLeft = self.rect.topleft
         self.rectCenter = self.calcRectCenter()
     
     def __str__(self):
@@ -38,7 +38,6 @@ class Agent:
         self.orientation = math.atan2(self.velocity.x, self.velocity.y)
         self.orientation = math.degrees(self.orientation)
         self.orientation += 180
-        print("Orientation:", str(self.orientation))
 
         # update agent rect
         self.updateRect()
@@ -92,10 +91,17 @@ class Agent:
     def checkBoundaries(self):
 
         # Clamp agent into world bounds
-        if (self.position.x < 0): self.position.x = 0
-        if (self.position.x + self.size.x > Const.DISPLAY_WIDTH): self.position.x = Const.DISPLAY_WIDTH - self.size.x
-        if (self.position.y < 0): self.position.y = 0
-        if (self.position.y + self.size.y > Const.DISPLAY_HEIGHT): self.position.y = Const.DISPLAY_HEIGHT - self.size.y
+        if (self.position.x < 0): self.position.x = 0   # Left
+        if (self.position.x + self.size.x > Const.DISPLAY_WIDTH): self.position.x = Const.DISPLAY_WIDTH - self.size.x   # Right
+        if (self.position.y < 0): self.position.y = 0   # Top
+        if (self.position.y + self.size.y > Const.DISPLAY_HEIGHT): self.position.y = Const.DISPLAY_HEIGHT - self.size.y # Bottom
 
-        # If agent is getting too close to a boundary, flee from it
-        
+        # If agent is getting too close to a boundary, push agent away
+        if (self.rect.top < Const.WORLD_MIN_DISTANCE):  # Top
+            self.velocity.y += Const.WORLD_BOUNDARY_FORCE
+        if (self.rect.bottom > (Const.DISPLAY_HEIGHT - Const.WORLD_MIN_DISTANCE)):  # Bottom
+            self.velocity.y += -Const.WORLD_BOUNDARY_FORCE
+        if (self.rect.left < Const.WORLD_MIN_DISTANCE):  # Left
+            self.velocity.x += Const.WORLD_BOUNDARY_FORCE
+        if (self.rect.right > (Const.DISPLAY_WIDTH - Const.WORLD_MIN_DISTANCE)):  # Right
+            self.velocity.x += -Const.WORLD_BOUNDARY_FORCE
