@@ -31,18 +31,13 @@ class Sheep(Agent):
         # Get direction to player/flee vector
         dogDist = self.position - dog.position
 
-        # Check if tagged, wander/flee if not tagged
-        if (self.tagged == False):
-            # Flee if player is within range
-            if (dogDist.length() < Const.SHEEP_FLEE_RANGE):
-                self.velocity += self.flee(dogDist)
-                self.drawSeekFlee(screen, dog)
-            # Wander if player is not in range
-            else:
-                self.velocity += self.wander()
-        # Stand in place if tagged
+        # Flee if player is within range
+        if (dogDist.length() < Const.SHEEP_FLEE_RANGE):
+            self.velocity += self.flee(dogDist)
+            self.drawSeekFlee(screen, dog)
+        # Wander if player is not in range
         else:
-            self.velocity = Vector.zero()
+            self.velocity += self.wander()
 
         # Check for collisions
         self.collided = self.checkCollision(dog)

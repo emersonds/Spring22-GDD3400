@@ -45,28 +45,15 @@ class Dog(Agent):
     
     # Set random target in enemies list
     def setTarget(self, sheepList):
-        # If no target is found, set target to self to freeze movement
-        self.target = self
 
         # Find a random target
-        i = 0
-        while i < len(sheepList):
-            randIndex = random.randint(0, len(sheepList) - 1)
-            # Check if potential target has been tagged
-            if (sheepList[randIndex].tagged == False):
-                # If random target hasn't been tagged, set target
-                self.target = sheepList[randIndex]
-                self.targetSelected = True
-                break
-            # Loop until a target has been set or there are no targets remaining
-            i += 1
-        
-        # No targets left
-        if (self.target == self):
-            print("No targets remaining.")
+
+        randIndex = random.randint(0, len(sheepList) - 1)
+        self.target = sheepList[randIndex]
+        self.targetSelected = True
 
     # Calculate direction and applied force
     def setForce(self):
         self.direction = (self.target.position - self.position).normalize()
         self.appliedForce = self.direction * Const.DOG_SEEK_WEIGHT
-        return self.appliedForce.normalize() * pt.deltaTime * Const.DOG_SPEED
+        return self.appliedForce * pt.deltaTime * Const.DOG_SPEED
