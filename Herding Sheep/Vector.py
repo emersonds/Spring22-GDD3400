@@ -1,0 +1,52 @@
+#   HW: Moving Agents
+#   Author: Dylan Emerson
+#   File: Vector.py
+
+import math
+
+# Used to represent quantities like position/movement
+class Vector:
+    # Constructor
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    # Converts a vector to a string
+    def __str__(self):
+        return ("Vector(" + str(self.x) + "," + str(self.y) + ")")
+
+    # Adds two vectors together
+    def __add__(self, other):
+        return Vector(self.x + other.x, self.y + other.y)
+
+    # Subtracts two vectors from each other
+    def __sub__(self, other):
+        return Vector(self.x - other.x, self.y - other.y)
+
+    # Multiplies a vector by another vector or number
+    def __mul__(self, other):
+        # Vector multiplication
+        if (type(other) == Vector):
+            return Vector(self.x * other.x, self.y * other.y)
+        # Number multiplication
+        else:
+            return Vector(self.x * other, self.y * other)
+    
+    # Returns the magnitude of a vector
+    def length(self):
+        return (math.sqrt((self.x * self.x) + (self.y * self.y)))
+    
+    # Normalizes the vector by changing its length to 1 while pointing in the same direction
+    def normalize(self):
+        # Store self.length because sqrt is expensive
+        leng = self.length()
+
+        # Check if length is 0 to prevent divide-by-zero errors
+        if leng == 0:
+            return Vector(0,0)
+        else:
+            return Vector(self.x / leng, self.y / leng)
+
+    # Returns a zero Vector
+    def zero():
+        return (Vector(0,0))
