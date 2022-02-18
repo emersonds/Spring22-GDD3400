@@ -110,7 +110,7 @@ class Graph():
 		return path
 
 	def findPath_Breadth(self, start, end):
-		""" Breadth Search """
+		""" Breadth Search by Dylan Emerson"""
 		print("BREADTH-FIRST")
 		self.reset()
 
@@ -120,7 +120,7 @@ class Graph():
 		toVisit[0].isVisited = True
 
 		# While toVisit has nodes to visit
-		while len(toVisit) != 0:
+		while len(toVisit) > 0:
 			# Remove first node from toVisit
 			currentNode = toVisit.pop(0)
 			# First node is "visited"
@@ -136,7 +136,7 @@ class Graph():
 					# Set neighbor back pointer to current node
 					neighbor.backNode = currentNode
 					# Check is neighbor is the end node
-					if neighbor == end:
+					if neighbor == self.getNodeFromPoint(end):
 						print("GOAL REACHED")
 						return self.buildPath(neighbor)
 
