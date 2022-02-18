@@ -73,7 +73,7 @@ def buildObstacles(graph):
 # Main Functionality
 #################################################################################
 
-pygame.init();
+pygame.init()
 
 screen = pygame.display.set_mode((Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT))
 clock = pygame.time.Clock()

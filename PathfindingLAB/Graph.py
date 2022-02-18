@@ -1,3 +1,5 @@
+from multiprocessing.pool import TERMINATE
+from sre_constants import SUCCESS
 import Constants
 import Node
 import pygame
@@ -113,6 +115,30 @@ class Graph():
 		self.reset()
 
 		# TODO: Add your breadth-first code here!
+		# Initialize toVisit list with start node
+		toVisit = [self.getNodeFromPoint(start)]
+		toVisit[0].isVisited = True
+
+		# While toVisit has nodes to visit
+		while len(toVisit) != 0:
+			# Remove first node from toVisit
+			currentNode = toVisit.pop(0)
+			# First node is "visited"
+			currentNode.isExplored = True
+
+			# Check each neighbor if it is the end node
+			for neighbor in currentNode.neighbors:
+				# If neighbor has not been visited
+				if neighbor.isVisited == False:
+					# Add it to toVisit list
+					toVisit.append(neighbor)
+					neighbor.isVisited = True
+					# Set neighbor back pointer to current node
+					neighbor.backNode = currentNode
+					# Check is neighbor is the end node
+					if neighbor == end:
+						print("GOAL REACHED")
+						return self.buildPath(neighbor)
 
 		return []
 
