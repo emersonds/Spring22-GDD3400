@@ -59,9 +59,12 @@ class Agent:
 
         # Get agent center
         self.center = self.calcCenter()
-        # Draw line from agent center showing their velocity
-        pygame.draw.line(screen, (Const.DEBUG_VELOCITY_COLOR), (self.rectCenter.x, self.rectCenter.y),
-            (self.rectCenter.x + self.velocity.x * Const.DEBUG_VELOCITY_LENGTH, self.rectCenter.y + self.velocity.y * Const.DEBUG_VELOCITY_LENGTH))
+
+        # Check if velocity line should show
+        if Const.DEBUG_VELOCITY:
+            # Draw line from agent center showing their velocity
+            pygame.draw.line(screen, (Const.DEBUG_VELOCITY_COLOR), (self.rectCenter.x, self.rectCenter.y),
+                (self.rectCenter.x + self.velocity.x * Const.DEBUG_VELOCITY_LENGTH, self.rectCenter.y + self.velocity.y * Const.DEBUG_VELOCITY_LENGTH))
 
         # Keep agent in world bounds and apply boundary force
         self.checkBoundaries(screen)
