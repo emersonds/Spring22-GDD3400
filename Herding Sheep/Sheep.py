@@ -19,8 +19,11 @@ class Sheep(Agent):
                              random.randint(0, Const.DISPLAY_HEIGHT))    # Get random initial target
         self.velocity = self.target     # Set velocity towards initial target
         self.last_target = 0    # Used for pygame timer
+        self.last_neighborhood = 0  # Used for neighborhood timer
         self.tagged = False     # Used for movement checking
         self.image = sprite
+        self.neighborCount = 0
+        self.neighborVector = Vector.zero()
 
         # Call parent constructor
         super().__init__(position, speed, size, sprite)
@@ -68,3 +71,30 @@ class Sheep(Agent):
         self.fleeing = True
         self.appliedForce = dogDist * Const.SHEEP_FLEE_WEIGHT
         return self.appliedForce.normalize() * pt.deltaTime * Const.SHEEP_SPEED
+
+    def calculateNeighbors(self, herd):
+        # Set up neighborhood timer
+        # Waits 16.33 milliseconds (Const.SHEEP_NEIGHBORHOOD_TICKS) then loops
+        # through potential neighbors
+        now = pygame.time.get_ticks()
+        if (now - self.last_neighborhood > Const.SHEEP_NEIGHBORHOOD_TICKS):
+            self.last_neighborhood = now
+
+            # Remove all previous neighbors
+            self.neighborCount = 0
+            self.neighborVector = Vector.zero()
+
+            # Calculate neighbors
+            for neighbor in herd:
+                # If the current neighbor isn't the same sheep
+                if (neighbor != self):
+                    # Get vector from self to neighbor
+                    neighborDist = neighbor.position - self.position
+                    if (neighborDist.length() < Const.SHEEP_NEIGHBOR_RADIUS):
+                        self.neighborVector.x += self.velocity.x
+                        self.neighborVector.y += self.velocity.y
+                        self.neighborCount += 1
+
+    # Computes alignment flocking behavior
+    def computeAlignment(self):
+        pass

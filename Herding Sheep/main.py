@@ -111,6 +111,7 @@ while True:
     #Draw enemies
     for sheep in sheepList:
         sheep.update(dog, screen)
+        sheep.calculateNeighbors(sheepList)
         sheep.draw(screen)
 
     # Refresh screen
