@@ -31,8 +31,9 @@ class Dog(Agent):
         else:
             # Set velocity and move player
             self.seeking = True
-            self.drawSeekFlee(screen, self.target)
             self.velocity += self.setForce()
+            if Const.DEBUG_DOG_INFLUENCE:
+                self.drawSeekFlee(screen, self.target)
         
         # Check for collisions
         self.collided = self.checkCollision(self.target)

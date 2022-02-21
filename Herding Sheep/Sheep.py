@@ -32,12 +32,13 @@ class Sheep(Agent):
         dogDist = self.position - dog.position
 
         # Flee if player is within range
-        if (dogDist.length() < Const.SHEEP_FLEE_RANGE):
+        if (dogDist.length() < Const.SHEEP_FLEE_RANGE and Const.ENABLE_DOG):
             self.velocity += self.flee(dogDist)
-            self.drawSeekFlee(screen, dog)
+            if Const.DEBUG_DOG_INFLUENCE:
+                self.drawSeekFlee(screen, dog)
         # Wander if player is not in range
         else:
-            self.velocity += self.wander()
+            self.velocity += Vector.zero() # TEMP until flocking behavior implemented
 
         # Check for collisions
         self.collided = self.checkCollision(dog)
@@ -47,24 +48,23 @@ class Sheep(Agent):
         # Call parent update
         super().update()
 
-    # Wander behavior
-    def wander(self):
-        # Set up wander timer so the enemy doesn't change directions every frame
-        # Waits Const.ENEMY_TICKS_TO_WAIT milliseconds before changing directions
-        now = pygame.time.get_ticks()
-        if (now - self.last_target > Const.SHEEP_TICKS_TO_WAIT):
-            self.last_target = now
+    # # Wander behavior
+    # def wander(self):
+    #     # Set up wander timer so the enemy doesn't change directions every frame
+    #     # Waits Const.ENEMY_TICKS_TO_WAIT milliseconds before changing directions
+    #     now = pygame.time.get_ticks()
+    #     if (now - self.last_target > Const.SHEEP_TICKS_TO_WAIT):
+    #         self.last_target = now
 
-            # Set new target similar to previous move vector
-            # From Dr. Dana's lecture 1/28/22
-            self.target = Vector(-self.velocity.y, self.velocity.x) * random.uniform(-1, 1) * Const.SHEEP_ROTATION_SCALAR
-        self.appliedForce = self.target * Const.SHEEP_WANDER_WEIGHT
-        return self.appliedForce.normalize() * pt.deltaTime * Const.SHEEP_SPEED
+    #         # Set new target similar to previous move vector
+    #         # From Dr. Dana's lecture 1/28/22
+    #         self.target = Vector(-self.velocity.y, self.velocity.x) * random.uniform(-1, 1) * Const.SHEEP_ROTATION_SCALAR
+    #     self.appliedForce = self.target * Const.SHEEP_WANDER_WEIGHT
+    #     return self.appliedForce.normalize() * pt.deltaTime * Const.SHEEP_SPEED
 
     # Flee behavior
     def flee(self, dogDist):
-        # Calculate distance to player (flee range)
-
+        # set self to fleeing and apply flee force
         self.fleeing = True
         self.appliedForce = dogDist * Const.SHEEP_FLEE_WEIGHT
         return self.appliedForce.normalize() * pt.deltaTime * Const.SHEEP_SPEED
