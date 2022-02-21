@@ -31,6 +31,9 @@ class Sheep(Agent):
     # Moves the enemy
     def update(self, dog, screen):
 
+        # Flocking forces
+        self.alignment = self.computeAlignment()
+
         # Get direction to player/flee vector
         dogDist = self.position - dog.position
 
@@ -41,7 +44,9 @@ class Sheep(Agent):
                 self.drawSeekFlee(screen, dog)
         # Wander if player is not in range
         else:
-            self.velocity += Vector.zero() # TEMP until flocking behavior implemented
+            self.forces = self.alignment * Const.SHEEP_ALIGNMENT_WEIGHT * Const.ENABLE_ALIGNMENT
+            self.forces.normalize()
+            self.velocity += self.forces
 
         # Check for collisions
         self.collided = self.checkCollision(dog)
@@ -97,4 +102,11 @@ class Sheep(Agent):
 
     # Computes alignment flocking behavior
     def computeAlignment(self):
-        pass
+        # Make sure neighbor count isn't 0
+        if self.neighborCount == 0:
+            return self.neighborVector
+        elif self.neighborCount > 0:
+            self.neighborVector.x /= self.neighborCount
+            self.neighborVector.y /= self.neighborCount
+            self.neighborVector.normalize()
+            return self.neighborVector
