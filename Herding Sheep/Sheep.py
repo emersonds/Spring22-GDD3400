@@ -31,13 +31,13 @@ class Sheep(Agent):
     # Moves the enemy
     def update(self, dog, screen):
 
+        # Get direction to player/flee vector
+        dogDist = self.position - dog.position
+
         # Flocking forces
         self.alignment = self.computeAlignment()
         self.cohesion = self.computeCohesion()
         self.separation = self.computeSeparation()
-
-        # Get direction to player/flee vector
-        dogDist = self.position - dog.position
 
         # Flee if player is within range
         if (dogDist.length() < Const.SHEEP_FLEE_RANGE and Const.ENABLE_DOG):
@@ -59,6 +59,14 @@ class Sheep(Agent):
 
         # Call parent update
         super().update()
+
+    def draw(self, screen):
+        if Const.DEBUG_NEIGHBORS:
+            for neighbor in self.neighbors:
+                pygame.draw.line(screen, Const.DEBUG_NEIGHBOR_COLOR, (self.rectCenter.x, self.rectCenter.y),
+                (neighbor.rect.center[0], neighbor.rect.center[1]))
+
+        super().draw(screen)
 
     # # Wander behavior
     # def wander(self):
@@ -91,8 +99,7 @@ class Sheep(Agent):
 
             # Remove all previous neighbors
             self.neighbors.clear()
-            self.neighborCount = 0
-            self.neighborVector = Vector.zero()
+
 
             # Calculate neighbors
             for neighbor in herd:
