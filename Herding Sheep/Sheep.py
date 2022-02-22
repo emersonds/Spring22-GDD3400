@@ -22,7 +22,7 @@ class Sheep(Agent):
         self.last_neighborhood = 0  # Used for neighborhood timer
         self.tagged = False     # Used for movement checking
         self.image = sprite
-        self.neighborCount = 0
+        self.neighbors = []
         self.neighborVector = Vector.zero()
 
         # Call parent constructor
@@ -86,6 +86,7 @@ class Sheep(Agent):
             self.last_neighborhood = now
 
             # Remove all previous neighbors
+            self.neighbors.clear()
             self.neighborCount = 0
             self.neighborVector = Vector.zero()
 
@@ -96,17 +97,25 @@ class Sheep(Agent):
                     # Get vector from self to neighbor
                     neighborDist = neighbor.position - self.position
                     if (neighborDist.length() < Const.SHEEP_NEIGHBOR_RADIUS):
-                        self.neighborVector.x += self.velocity.x
-                        self.neighborVector.y += self.velocity.y
-                        self.neighborCount += 1
+                        self.neighbors.append(neighbor)
 
     # Computes alignment flocking behavior
     def computeAlignment(self):
+        # Set neighbor count variable
+        neighborCount = len(self.neighbors)
+
         # Make sure neighbor count isn't 0
-        if self.neighborCount == 0:
+        if neighborCount == 0:
             return self.neighborVector
-        elif self.neighborCount > 0:
-            self.neighborVector.x /= self.neighborCount
-            self.neighborVector.y /= self.neighborCount
-            self.neighborVector.normalize()
-            return self.neighborVector
+        elif neighborCount > 0:
+            for neighbor in self.neighbors:
+                # Alignment behavior
+                self.neighborVector += neighbor.velocity
+                self.neighborVector.x /= neighborCount
+                self.neighborVector.y /= neighborCount
+                self.neighborVector.normalize()
+                return self.neighborVector
+
+    # Computes cohesion flocking behavior
+    def computeCohesion(self):
+        pass
