@@ -33,6 +33,7 @@ class Sheep(Agent):
 
         # Flocking forces
         self.alignment = self.computeAlignment()
+        self.cohesion = self.computeCohesion()
 
         # Get direction to player/flee vector
         dogDist = self.position - dog.position
@@ -44,7 +45,9 @@ class Sheep(Agent):
                 self.drawSeekFlee(screen, dog)
         # Wander if player is not in range
         else:
-            self.forces = self.alignment * Const.SHEEP_ALIGNMENT_WEIGHT * Const.ENABLE_ALIGNMENT
+            # self.forces = self.alignment * Const.SHEEP_ALIGNMENT_WEIGHT * Const.ENABLE_ALIGNMENT \
+            #     + self.cohesion * Const.SHEEP_COHESION_WEIGHT * Const.ENABLE_COHESION
+            self.forces = self.cohesion * Const.SHEEP_COHESION_WEIGHT * Const.ENABLE_COHESION
             self.forces.normalize()
             self.velocity += self.forces
 
@@ -109,13 +112,33 @@ class Sheep(Agent):
             return self.neighborVector
         elif neighborCount > 0:
             for neighbor in self.neighbors:
-                # Alignment behavior
+                # Alignment behavior adds neighbor velocity to computation vector
                 self.neighborVector += neighbor.velocity
-                self.neighborVector.x /= neighborCount
-                self.neighborVector.y /= neighborCount
-                self.neighborVector.normalize()
-                return self.neighborVector
+
+            # Divide computation by neighbor vector and normalize to get final vector
+            self.neighborVector.x /= neighborCount
+            self.neighborVector.y /= neighborCount
+            self.neighborVector.normalize()
+            return self.neighborVector
 
     # Computes cohesion flocking behavior
     def computeCohesion(self):
-        pass
+        # Set neighbor count variable
+        neighborCount = len(self.neighbors)
+
+        # Make sure neighbor count isn't 0
+        if neighborCount == 0:
+            return self.neighborVector
+        elif neighborCount > 0:
+            for neighbor in self.neighbors:
+                # Cohesion behavior adds neighbor position to computation vector
+                self.neighborVector += neighbor.position
+            
+            # Divide computation by neighbor vector and normalize to get final vector
+            self.neighborVector.x /= neighborCount
+            self.neighborVector.y /= neighborCount
+            self.neighborVector = Vector(self.neighborVector.x - self.position.x,
+                                            self.neighborVector.y - self.position.y)
+            self.neighborVector.normalize()
+            print("Neighbor vector: ", self.neighborVector)
+            return self.neighborVector
