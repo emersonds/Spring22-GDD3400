@@ -34,6 +34,7 @@ class Sheep(Agent):
         # Flocking forces
         self.alignment = self.computeAlignment()
         self.cohesion = self.computeCohesion()
+        self.separation = self.computeSeparation()
 
         # Get direction to player/flee vector
         dogDist = self.position - dog.position
@@ -45,11 +46,11 @@ class Sheep(Agent):
                 self.drawSeekFlee(screen, dog)
         # Wander if player is not in range
         else:
-            # self.forces = self.alignment * Const.SHEEP_ALIGNMENT_WEIGHT * Const.ENABLE_ALIGNMENT \
-            #     + self.cohesion * Const.SHEEP_COHESION_WEIGHT * Const.ENABLE_COHESION
-            self.forces = self.cohesion * Const.SHEEP_COHESION_WEIGHT * Const.ENABLE_COHESION
+            self.forces = self.alignment * Const.SHEEP_ALIGNMENT_WEIGHT * Const.ENABLE_ALIGNMENT \
+                + self.cohesion * Const.SHEEP_COHESION_WEIGHT * Const.ENABLE_COHESION \
+                + self.separation * Const.SHEEP_SEPARATION_WEIGHT * Const.ENABLE_SEPARATION
             self.forces.normalize()
-            self.velocity += self.forces
+            self.velocity += self.forces * pt.deltaTime * Const.SHEEP_SPEED
 
         # Check for collisions
         self.collided = self.checkCollision(dog)
@@ -102,43 +103,70 @@ class Sheep(Agent):
                     if (neighborDist.length() < Const.SHEEP_NEIGHBOR_RADIUS):
                         self.neighbors.append(neighbor)
 
-    # Computes alignment flocking behavior
+# Computes alignment flocking behavior
     def computeAlignment(self):
         # Set neighbor count variable
         neighborCount = len(self.neighbors)
 
+        neighborVector = Vector.zero()
+
         # Make sure neighbor count isn't 0
         if neighborCount == 0:
-            return self.neighborVector
+            return neighborVector
         elif neighborCount > 0:
             for neighbor in self.neighbors:
                 # Alignment behavior adds neighbor velocity to computation vector
-                self.neighborVector += neighbor.velocity
+                neighborVector += neighbor.velocity
 
             # Divide computation by neighbor vector and normalize to get final vector
-            self.neighborVector.x /= neighborCount
-            self.neighborVector.y /= neighborCount
-            self.neighborVector.normalize()
-            return self.neighborVector
+            neighborVector.x /= neighborCount
+            neighborVector.y /= neighborCount
+            neighborVector.normalize()
+            return neighborVector
 
     # Computes cohesion flocking behavior
     def computeCohesion(self):
         # Set neighbor count variable
         neighborCount = len(self.neighbors)
 
+        neighborVector = Vector.zero()
+
         # Make sure neighbor count isn't 0
         if neighborCount == 0:
-            return self.neighborVector
+            return neighborVector
         elif neighborCount > 0:
             for neighbor in self.neighbors:
                 # Cohesion behavior adds neighbor position to computation vector
-                self.neighborVector += neighbor.position
+                neighborVector += neighbor.position
             
             # Divide computation by neighbor vector and normalize to get final vector
-            self.neighborVector.x /= neighborCount
-            self.neighborVector.y /= neighborCount
-            self.neighborVector = Vector(self.neighborVector.x - self.position.x,
-                                            self.neighborVector.y - self.position.y)
-            self.neighborVector.normalize()
-            print("Neighbor vector: ", self.neighborVector)
-            return self.neighborVector
+            neighborVector.x /= neighborCount
+            neighborVector.y /= neighborCount
+            neighborVector = Vector(neighborVector.x - self.position.x,
+                                            neighborVector.y - self.position.y)
+            neighborVector.normalize()
+            return neighborVector
+
+    # Computes separation flocking behavior
+    def computeSeparation(self):
+        # Set neighbor count variable
+        neighborCount = len(self.neighbors)
+
+        neighborVector = Vector.zero()
+
+        # Make sure neighbor count isn't 0
+        if neighborCount == 0:
+            return neighborVector
+        elif neighborCount > 0:
+            for neighbor in self.neighbors:
+                # Separation behavior adds neighbor distance to computation vector
+                neighborVector += neighbor.position - self.position
+            
+            # Divide computation by neighbor vector,
+            # Negate the vector to steer away from neighbors,
+            # then normalize to get final vector
+            neighborVector.x /= neighborCount
+            neighborVector.y /= neighborCount
+            neighborVector *= -1
+            neighborVector.normalize()
+            return neighborVector
