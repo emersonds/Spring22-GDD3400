@@ -152,33 +152,51 @@ class Graph():
 		toVisit[0].costFromStart = 0
 
 		while len(toVisit) > 0:
+			# Sort list
+			toVisit.sort(key=lambda x:x.costFromStart)
+
+			# Remove first node from toVisit
+			currentNode = toVisit.pop(0)
+
+			# First node is "visited"
+			currentNode.isExplored = True
+
 			# Check if current node is the end node
 			if currentNode == self.getNodeFromPoint(end):
 				print("GOAL REACHED")
 				return self.buildPath(currentNode)
-			
-			# Remove first node from toVisit
-			currentNode = toVisit.pop(0)
-			
-			# First node is "visited"
-			currentNode.isExplored = True
 
 			# Check each neighbor if it is the end node
 			for neighbor in currentNode.neighbors:
-				# Get cost
-				currentDistance = neighbor.center - currentNode.center
+				# Get distance from current node to neighbor
+				currentDistance = (neighbor.center - currentNode.center).length()
 
 				# If neighbor has not been visited
 				if neighbor.isVisited == False:
-					# Add it to toVisit list
-					toVisit.append(neighbor)
+					# Set it visited
 					neighbor.isVisited = True
+
+					# Set its cost from the starting node
+					# This is the distance from current node to neighbor node,
+					# plus the currentNode's cost from start
+					neighbor.costFromStart = currentDistance + currentNode.costFromStart
+
 					# Set neighbor back pointer to current node
 					neighbor.backNode = currentNode
-					# Check is neighbor is the end node
-					if neighbor == self.getNodeFromPoint(end):
-						print("GOAL REACHED")
-						return self.buildPath(neighbor)
+
+					# Add to queue
+					toVisit.append(neighbor)
+
+				# If it has been visited, check if distance is shorter
+				else:
+					# Check if the distance between the current neighbor and
+					# the current node plus the current node cost from start
+					# is less than the current neighbor's cost from start
+					if currentDistance + currentNode.costFromStart < neighbor.costFromStart:
+						# Shorter path has been found to neighbor, so change it's costFromStart
+						# neighbor costFromStart becomes new shorter distance
+						neighbor.costFromStart = currentDistance + currentNode.costFromStart
+						neighbor.backNode = currentNode
 		
 		# Return empty path indicating no path was found
 		return []
