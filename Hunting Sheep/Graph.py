@@ -210,10 +210,12 @@ class Graph():
 		toVisit = [self.getNodeFromPoint(start)]
 		toVisit[0].isVisited = True
 		toVisit[0].costFromStart = 0
+		toVisit[0].costToEnd = (toVisit[0].center - self.getNodeFromPoint(end).center).length()
+		toVisit[0].cost = toVisit[0].costFromStart + toVisit[0].costToEnd
 
 		while len(toVisit) > 0:
 			# Sort list
-			toVisit.sort(key=lambda x:x.costFromStart)
+			toVisit.sort(key=lambda x:x.cost)
 
 			# Remove first node from toVisit
 			currentNode = toVisit.pop(0)
@@ -241,6 +243,12 @@ class Graph():
 					# plus the currentNode's cost from start
 					neighbor.costFromStart = currentDistance + currentNode.costFromStart
 
+					# Set its cost to the end node
+					neighbor.costToEnd = (neighbor.center - self.getNodeFromPoint(end).center).length()
+
+					# Set its total cost
+					neighbor.cost = neighbor.costFromStart + neighbor.costToEnd
+
 					# Set neighbor back pointer to current node
 					neighbor.backNode = currentNode
 
@@ -256,6 +264,8 @@ class Graph():
 						# Shorter path has been found to neighbor, so change it's costFromStart
 						# neighbor costFromStart becomes new shorter distance
 						neighbor.costFromStart = currentDistance + currentNode.costFromStart
+						neighbor.costToEnd = (neighbor.center - self.getNodeFromPoint(end).center).length()
+						neighbor.cost = neighbor.costFromStart + neighbor.costToEnd
 						neighbor.backNode = currentNode
 
 		# Return empty path indicating no path was found
