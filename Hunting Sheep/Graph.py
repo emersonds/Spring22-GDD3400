@@ -108,7 +108,7 @@ class Graph():
 		return path
 
 	def findPath_Breadth(self, start, end):
-		""" Breadth Search by Dylan Emerson"""
+		""" Breadth Search by Dylan Emerson """
 		print("BREADTH-FIRST")
 		self.reset()
 
@@ -141,7 +141,7 @@ class Graph():
 		return []
 
 	def findPath_Djikstra(self, start, end):
-		""" Djikstra's Search """
+		""" Djikstra's Search by Dylan Emerson """
 		print("DJIKSTRA")
 		self.reset()
 
@@ -202,21 +202,108 @@ class Graph():
 		return []
 
 	def findPath_AStar(self, start, end):
-		""" A Star Search """
+		""" A Star Search by Dylan Emerson """
 		print("A_STAR")
 		self.reset()
 
 		# TODO: Implement A Star Search
-		
+		toVisit = [self.getNodeFromPoint(start)]
+		toVisit[0].isVisited = True
+		toVisit[0].costFromStart = 0
+
+		while len(toVisit) > 0:
+			# Sort list
+			toVisit.sort(key=lambda x:x.costFromStart)
+
+			# Remove first node from toVisit
+			currentNode = toVisit.pop(0)
+
+			# First node is "visited"
+			currentNode.isExplored = True
+
+			# Check if current node is the end node
+			if currentNode == self.getNodeFromPoint(end):
+				print("GOAL REACHED")
+				return self.buildPath(currentNode)
+
+			# Check each neighbor if it is the end node
+			for neighbor in currentNode.neighbors:
+				# Get distance from current node to neighbor
+				currentDistance = (neighbor.center - currentNode.center).length()
+
+				# If neighbor has not been visited
+				if neighbor.isVisited == False:
+					# Set it visited
+					neighbor.isVisited = True
+
+					# Set its cost from the starting node
+					# This is the distance from current node to neighbor node,
+					# plus the currentNode's cost from start
+					neighbor.costFromStart = currentDistance + currentNode.costFromStart
+
+					# Set neighbor back pointer to current node
+					neighbor.backNode = currentNode
+
+					# Add to queue
+					toVisit.append(neighbor)
+
+				# If it has been visited, check if distance is shorter
+				else:
+					# Check if the distance between the current neighbor and
+					# the current node plus the current node cost from start
+					# is less than the current neighbor's cost from start
+					if currentDistance + currentNode.costFromStart < neighbor.costFromStart:
+						# Shorter path has been found to neighbor, so change it's costFromStart
+						# neighbor costFromStart becomes new shorter distance
+						neighbor.costFromStart = currentDistance + currentNode.costFromStart
+						neighbor.backNode = currentNode
+
 		# Return empty path indicating no path was found
 		return []
 
 	def findPath_BestFirst(self, start, end):
-		""" Best First Search """
+		""" Best First Search by Dylan Emerson """
 		print("BEST_FIRST")
 		self.reset()
 
 		# TODO: Implement Best First Search
+		# Initialize priority list
+		toVisit = [self.getNodeFromPoint(start)]
+		# First node is visited and 
+		toVisit[0].isVisited = True
+		# Set cost to end for start node
+		toVisit[0].costToEnd = (toVisit[0].center - self.getNodeFromPoint(end).center).length()
+
+		while len(toVisit) > 0:
+			# Sort list by cost to end node
+			toVisit.sort(key=lambda x:x.costToEnd)
+
+			# Remove first node from toVisit
+			currentNode = toVisit.pop(0)
+
+			# First node is "visited"
+			currentNode.isExplored = True
+
+			# Check if current node is the end node
+			if currentNode == self.getNodeFromPoint(end):
+				print("GOAL REACHED")
+				return self.buildPath(currentNode)
+
+			# Check each neighbor if it is the end node
+			for neighbor in currentNode.neighbors:
+				# If neighbor has not been visited
+				if neighbor.isVisited == False:
+					# Set it visited
+					neighbor.isVisited = True
+
+					# Set cost to end as distance to end node
+					neighbor.costToEnd = (neighbor.center - self.getNodeFromPoint(end).center).length()
+
+					# Set neighbor back pointer to current node
+					neighbor.backNode = currentNode
+
+					# Add to queue
+					toVisit.append(neighbor)
 		
 		# Return empty path indicating no path was found
 		return []
