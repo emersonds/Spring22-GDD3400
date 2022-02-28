@@ -119,20 +119,26 @@ class Graph():
 
 		# While toVisit has nodes to visit
 		while len(toVisit) > 0:
+
 			# Remove first node from toVisit
 			currentNode = toVisit.pop(0)
+
 			# First node is "visited"
 			currentNode.isExplored = True
 
 			# Check each neighbor if it is the end node
 			for neighbor in currentNode.neighbors:
+
 				# If neighbor has not been visited
 				if neighbor.isVisited == False:
-					# Add it to toVisit list
+
+					# Add it to toVisit list and "visit" it
 					toVisit.append(neighbor)
 					neighbor.isVisited = True
+
 					# Set neighbor back pointer to current node
 					neighbor.backNode = currentNode
+					
 					# Check is neighbor is the end node
 					if neighbor == self.getNodeFromPoint(end):
 						print("GOAL REACHED")
@@ -207,7 +213,10 @@ class Graph():
 		self.reset()
 
 		# TODO: Implement A Star Search
+		# Initialize priority queue
 		toVisit = [self.getNodeFromPoint(start)]
+
+		# Set starting node visited and cost values
 		toVisit[0].isVisited = True
 		toVisit[0].costFromStart = 0
 		toVisit[0].costToEnd = (toVisit[0].center - self.getNodeFromPoint(end).center).length()
@@ -230,6 +239,7 @@ class Graph():
 
 			# Check each neighbor if it is the end node
 			for neighbor in currentNode.neighbors:
+
 				# Get distance from current node to neighbor
 				currentDistance = (neighbor.center - currentNode.center).length()
 
@@ -264,8 +274,12 @@ class Graph():
 						# Shorter path has been found to neighbor, so change it's costFromStart
 						# neighbor costFromStart becomes new shorter distance
 						neighbor.costFromStart = currentDistance + currentNode.costFromStart
+
+						# Recalculate cost to end and total cost
 						neighbor.costToEnd = (neighbor.center - self.getNodeFromPoint(end).center).length()
 						neighbor.cost = neighbor.costFromStart + neighbor.costToEnd
+
+						# Set back pointer to current node
 						neighbor.backNode = currentNode
 
 		# Return empty path indicating no path was found
@@ -279,8 +293,10 @@ class Graph():
 		# TODO: Implement Best First Search
 		# Initialize priority list
 		toVisit = [self.getNodeFromPoint(start)]
+
 		# First node is visited and 
 		toVisit[0].isVisited = True
+
 		# Set cost to end for start node
 		toVisit[0].costToEnd = (toVisit[0].center - self.getNodeFromPoint(end).center).length()
 
@@ -299,10 +315,12 @@ class Graph():
 				print("GOAL REACHED")
 				return self.buildPath(currentNode)
 
-			# Check each neighbor if it is the end node
+			# Check each neighbor's cost to end
 			for neighbor in currentNode.neighbors:
+
 				# If neighbor has not been visited
 				if neighbor.isVisited == False:
+
 					# Set it visited
 					neighbor.isVisited = True
 
