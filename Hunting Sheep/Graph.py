@@ -108,13 +108,36 @@ class Graph():
 		return path
 
 	def findPath_Breadth(self, start, end):
-		""" Breadth Search """
-		print("BREADTH")
+		""" Breadth Search by Dylan Emerson"""
+		print("BREADTH-FIRST")
 		self.reset()
 
-		# TODO: Implement Breadth-first Search
+		# TODO: Add your breadth-first code here!
+		# Initialize toVisit list with start node
+		toVisit = [self.getNodeFromPoint(start)]
+		toVisit[0].isVisited = True
 
-		# Return empty path indicating no path was found
+		# While toVisit has nodes to visit
+		while len(toVisit) > 0:
+			# Remove first node from toVisit
+			currentNode = toVisit.pop(0)
+			# First node is "visited"
+			currentNode.isExplored = True
+
+			# Check each neighbor if it is the end node
+			for neighbor in currentNode.neighbors:
+				# If neighbor has not been visited
+				if neighbor.isVisited == False:
+					# Add it to toVisit list
+					toVisit.append(neighbor)
+					neighbor.isVisited = True
+					# Set neighbor back pointer to current node
+					neighbor.backNode = currentNode
+					# Check is neighbor is the end node
+					if neighbor == self.getNodeFromPoint(end):
+						print("GOAL REACHED")
+						return self.buildPath(neighbor)
+
 		return []
 
 	def findPath_Djikstra(self, start, end):
