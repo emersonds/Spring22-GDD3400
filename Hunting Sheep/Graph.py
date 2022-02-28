@@ -146,6 +146,39 @@ class Graph():
 		self.reset()
 
 		# TODO: Implement Djikstra's Search
+		# Initialize priority list
+		toVisit = [self.getNodeFromPoint(start)]
+		toVisit[0].isVisited = True
+		toVisit[0].costFromStart = 0
+
+		while len(toVisit) > 0:
+			# Check if current node is the end node
+			if currentNode == self.getNodeFromPoint(end):
+				print("GOAL REACHED")
+				return self.buildPath(currentNode)
+			
+			# Remove first node from toVisit
+			currentNode = toVisit.pop(0)
+			
+			# First node is "visited"
+			currentNode.isExplored = True
+
+			# Check each neighbor if it is the end node
+			for neighbor in currentNode.neighbors:
+				# Get cost
+				currentDistance = neighbor.center - currentNode.center
+
+				# If neighbor has not been visited
+				if neighbor.isVisited == False:
+					# Add it to toVisit list
+					toVisit.append(neighbor)
+					neighbor.isVisited = True
+					# Set neighbor back pointer to current node
+					neighbor.backNode = currentNode
+					# Check is neighbor is the end node
+					if neighbor == self.getNodeFromPoint(end):
+						print("GOAL REACHED")
+						return self.buildPath(neighbor)
 		
 		# Return empty path indicating no path was found
 		return []
