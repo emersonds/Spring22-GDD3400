@@ -142,7 +142,7 @@ def computeNeighbors(herd):
 # objects as the last time.  Change the number to test out some variations
 #random.seed(1005)
 
-pygame.init();
+pygame.init()
 
 # Set up the visual world
 screen = pygame.display.set_mode((WORLD_WIDTH, WORLD_HEIGHT))

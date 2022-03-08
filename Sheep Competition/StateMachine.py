@@ -72,15 +72,46 @@ class FindSheepState(State):
 		# You could add some logic here to pick which state to go to next
 		# depending on the gameState
 
-		dog.calculatePathToNewTarget(dog.getTargetSheep().center)
-
-
-		return Idle()
+		if (len(gameState.getHerd()) == 0):
+			return Idle()
+		else:
+			return ApproachSheepState()
 
 class ApproachSheepState(State):
 	""" This is a state where the dog moves to a point that puts the \
 		sheep between the dog and pen """
-	pass
+
+	def update(self, gameState):
+		""" Update this state using the current gameState """
+		super().update(gameState)
+		dog = gameState.getDog()
+		sheep = dog.getTargetSheep()
+		pen = gameState.getPenBounds()	# [0] = entrance, [1] = inside
+		entrance = pen[0]	# rect(top left x, top y, width, height)
+		entranceLeftX = entrance[0]	# Left
+		entranceY = entrance[1]		# Top
+		entranceRightX = entranceLeftX + entrance[2]	# left + width = right
+		entranceMiddle = Vector(entranceLeftX + (entrance[2] * 0.5), entranceY)
+
+		# Find a point that puts sheep between dog and pen
+		if not dog.isFollowingPath:
+			# If sheep is above pen, find path to push it down
+			if sheep.center.y < entranceY:
+				if sheep.center.x < entranceLeftX:
+					print ("Sheep above and to the left of entrance")
+				elif sheep.center.x > entranceRightX:
+					print ("Sheep above and to the right of entrance")
+				else:
+					print ("Sheep above and in the middle of entrance")
+			# If sheep is below pen, find path to push it up
+			if sheep.center.y > entranceY:
+				if sheep.center.x < entranceLeftX:
+					print ("Sheep below and to the left of entrance")
+				elif sheep.center.x > entranceRightX:
+					print ("Sheep below and to the right of entrance")
+				else:
+					print ("Sheep below and in the middle of entrance")
+
 
 class SteerSheepAbovePenState(State):
 	""" This is a state that loops until the sheep is above the pen """

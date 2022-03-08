@@ -23,7 +23,7 @@ class Dog(Agent):
 		self.gateNumber = 0
 		self.isFollowingPath = False
 		self.path = []
-		self.stateMachine = StateMachine(FindSheepState())
+		self.stateMachine = StateMachine(Idle())
 		self.targetSheep = None
 
 	def setTargetSheep(self, sheep):
