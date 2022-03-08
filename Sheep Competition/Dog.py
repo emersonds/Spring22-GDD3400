@@ -1,6 +1,7 @@
 import pygame
 import Vector
 import StateMachine
+import Constants
 
 from Vector import Vector
 from Agent import *

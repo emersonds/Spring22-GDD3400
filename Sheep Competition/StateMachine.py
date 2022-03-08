@@ -77,6 +77,19 @@ class FindSheepState(State):
 
 		return Idle()
 
+class ApproachSheepState(State):
+	""" This is a state where the dog moves to a point that puts the \
+		sheep between the dog and pen """
+	pass
+
+class SteerSheepAbovePenState(State):
+	""" This is a state that loops until the sheep is above the pen """
+	pass
+
+class PushIntoPenState(State):
+	""" This is a state where the dog pushes the sheep into the pen """
+	pass
+
 class Idle(State):
 	""" This is an idle state where the dog does nothing """
 
