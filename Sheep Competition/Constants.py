@@ -14,6 +14,7 @@ NBR_CLUMPED_OBSTACLES = 20
 # Pen Constants
 PEN_DEPTH = 160
 PEN = [ [ [440, 312], [600, 312] ]  ]
+PEN_UPPER_BUFFER = 0
 
 # Dog Constants		  
 DOG_HEIGHT = 32

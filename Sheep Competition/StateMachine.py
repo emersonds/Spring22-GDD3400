@@ -96,21 +96,45 @@ class ApproachSheepState(State):
 		# Find a point that puts sheep between dog and pen
 		if not dog.isFollowingPath:
 			# If sheep is above pen, find path to push it down
-			if sheep.center.y < entranceY:
+			# Use upper buffer to prevent dog pushing sheep into side of pen
+			# This should transition to PushIntoPenState
+			if sheep.center.y < (entranceY - Constants.PEN_UPPER_BUFFER):
 				if sheep.center.x < entranceLeftX:
 					print ("Sheep above and to the left of entrance")
+					# Path dog towards a point that would push the sheep into pen
+					dogTarget = Vector(sheep.center.x - 20, sheep.center.y - 20)
+					dog.calculatePathToNewTarget(dogTarget)
 				elif sheep.center.x > entranceRightX:
 					print ("Sheep above and to the right of entrance")
+					# Path dog towards a point that would push the sheep into pen
+					dogTarget = Vector(sheep.center.x + 20, sheep.center.y - 20)
+					dog.calculatePathToNewTarget(dogTarget)
 				else:
 					print ("Sheep above and in the middle of entrance")
+					# Path dog towards a point that would push the sheep into pen
+					dogTarget = Vector(sheep.center.x, sheep.center.y - 20)
+					dog.calculatePathToNewTarget(dogTarget)
 			# If sheep is below pen, find path to push it up
-			if sheep.center.y > entranceY:
-				if sheep.center.x < entranceLeftX:
-					print ("Sheep below and to the left of entrance")
-				elif sheep.center.x > entranceRightX:
-					print ("Sheep below and to the right of entrance")
-				else:
-					print ("Sheep below and in the middle of entrance")
+			# Use upper buffer to prevent dog pushing sheep into side of pen
+			# This should transition to SteerSheepAbovePenState
+			# elif sheep.center.y > entranceY: # sheep below pen
+			# 	if dog.center.y < sheep.center.y: # dog above sheep
+			# 		if sheep.center.x > entranceMiddle.x: # sheep is to right of pen entrance
+			# 			targPos = Vector(sheep.center.x - 50, sheep.center.y + 20) # Move dog slightly left of sheep & slightly below
+			# 			dog.calculatePathToNewTarget(targPos)
+			# 		if sheep.center.x < entranceMiddle.x: # sheep is to left of pen entrance
+			# 			targPos = Vector(sheep.center.x + 50, sheep.center.y + 20) # Move dog slightly right of sheep & slightly below
+			# 			dog.calculatePathToNewTarget(targPos)
+			# 	if dog.center.y >= sheep.center.y: # dog is below or at same level as sheep
+			# 		if sheep.center.x > entranceLeftX and sheep.center.x < entranceRightX: # check if sheep is within pen bounds
+			# 			if sheep.center.x > sheep.center: # sheep is to right of pen entrance
+			# 				targPos = Vector(sheep.center.x - 50, sheep.center.y + 20) # Move dog slightly left of sheep & slightly below
+			# 				dog.calculatePathToNewTarget(targPos)
+			# 			if sheep.center.x < entranceMiddle.x: # sheep is to left of pen entrance
+			# 				targPos = Vector(sheep.center.x + 50, sheep.center.y + 20) # Move dog slightly right of sheep & slightly below
+			# 				dog.calculatePathToNewTarget(targPos)
+			# 		elif sheep.center.x < entranceLeftX or sheep.center.x > entranceRightX: #sheep is outside of pen bounds
+			# 			dog.calculatePathToNewTarget(sheep.center)
 
 
 class SteerSheepAbovePenState(State):
