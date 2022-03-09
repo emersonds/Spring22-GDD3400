@@ -85,13 +85,14 @@ class ApproachSheepState(State):
 		""" Update this state using the current gameState """
 		super().update(gameState)
 		dog = gameState.getDog()
+		dog.setFinishedPath(False)
 		sheep = dog.getTargetSheep()
 		pen = gameState.getPenBounds()	# [0] = entrance, [1] = inside
 		entrance = pen[0]	# rect(top left x, top y, width, height)
 		entranceLeftX = entrance[0]	# Left
 		entranceY = entrance[1]		# Top
 		entranceRightX = entranceLeftX + entrance[2]	# left + width = right
-		entranceMiddle = Vector(entranceLeftX + (entrance[2] * 0.5), entranceY)
+		#entranceMiddle = Vector(entranceLeftX + (entrance[2] * 0.5), entranceY)
 
 		# Find a point that puts sheep between dog and pen
 		if not dog.isFollowingPath:
@@ -102,48 +103,71 @@ class ApproachSheepState(State):
 				if sheep.center.x < entranceLeftX:
 					print ("Sheep above and to the left of entrance")
 					# Path dog towards a point that would push the sheep into pen
-					dogTarget = Vector(sheep.center.x - 20, sheep.center.y - 20)
-					dog.calculatePathToNewTarget(dogTarget)
+					dogTarget = Vector(sheep.center.x - Constants.DOG_HERDING_DIST,
+					            sheep.center.y - Constants.DOG_HERDING_DIST)
+					dog.setTargetNode(dogTarget)
+					return PushIntoPenState()
 				elif sheep.center.x > entranceRightX:
 					print ("Sheep above and to the right of entrance")
 					# Path dog towards a point that would push the sheep into pen
-					dogTarget = Vector(sheep.center.x + 20, sheep.center.y - 20)
-					dog.calculatePathToNewTarget(dogTarget)
+					dogTarget = Vector(sheep.center.x + Constants.DOG_HERDING_DIST,
+								sheep.center.y - Constants.DOG_HERDING_DIST)
+					dog.setTargetNode(dogTarget)
+					return PushIntoPenState()
 				else:
 					print ("Sheep above and in the middle of entrance")
 					# Path dog towards a point that would push the sheep into pen
-					dogTarget = Vector(sheep.center.x, sheep.center.y - 20)
-					dog.calculatePathToNewTarget(dogTarget)
+					dogTarget = Vector(sheep.center.x, sheep.center.y - Constants.DOG_HERDING_DIST)
+					dog.setTargetNode(dogTarget)
+					return PushIntoPenState()
 			# If sheep is below pen, find path to push it up
 			# Use upper buffer to prevent dog pushing sheep into side of pen
-			# This should transition to SteerSheepAbovePenState
-			# elif sheep.center.y > entranceY: # sheep below pen
-			# 	if dog.center.y < sheep.center.y: # dog above sheep
-			# 		if sheep.center.x > entranceMiddle.x: # sheep is to right of pen entrance
-			# 			targPos = Vector(sheep.center.x - 50, sheep.center.y + 20) # Move dog slightly left of sheep & slightly below
-			# 			dog.calculatePathToNewTarget(targPos)
-			# 		if sheep.center.x < entranceMiddle.x: # sheep is to left of pen entrance
-			# 			targPos = Vector(sheep.center.x + 50, sheep.center.y + 20) # Move dog slightly right of sheep & slightly below
-			# 			dog.calculatePathToNewTarget(targPos)
-			# 	if dog.center.y >= sheep.center.y: # dog is below or at same level as sheep
-			# 		if sheep.center.x > entranceLeftX and sheep.center.x < entranceRightX: # check if sheep is within pen bounds
-			# 			if sheep.center.x > sheep.center: # sheep is to right of pen entrance
-			# 				targPos = Vector(sheep.center.x - 50, sheep.center.y + 20) # Move dog slightly left of sheep & slightly below
-			# 				dog.calculatePathToNewTarget(targPos)
-			# 			if sheep.center.x < entranceMiddle.x: # sheep is to left of pen entrance
-			# 				targPos = Vector(sheep.center.x + 50, sheep.center.y + 20) # Move dog slightly right of sheep & slightly below
-			# 				dog.calculatePathToNewTarget(targPos)
-			# 		elif sheep.center.x < entranceLeftX or sheep.center.x > entranceRightX: #sheep is outside of pen bounds
-			# 			dog.calculatePathToNewTarget(sheep.center)
-
-
-class SteerSheepAbovePenState(State):
-	""" This is a state that loops until the sheep is above the pen """
-	pass
+			# This should transition to PushIntoPenState
+			elif sheep.center.y > (entranceY - Constants.PEN_UPPER_BUFFER):
+				if sheep.center.x < entranceLeftX:
+					print ("Sheep below and to the left of entrance")
+					# Path dog towards a point that would push the sheep above the pen
+					dogTarget = Vector(sheep.center.x + Constants.DOG_HERDING_DIST,
+								sheep.center.y + Constants.DOG_HERDING_DIST)
+					dog.setTargetNode(dogTarget)
+					return PushIntoPenState()
+				elif sheep.center.x > entranceRightX:
+					print ("Sheep below and to the right of entrance")
+					# Path dog towards a point that would push the sheep above the pen
+					dogTarget = Vector(sheep.center.x + Constants.DOG_HERDING_DIST,
+								sheep.center.y + Constants.DOG_HERDING_DIST)
+					dog.setTargetNode(dogTarget)
+					return PushIntoPenState()
+				else:
+					print ("Sheep below and in the middle of entrance")
+					# Path dog towards a point that would push the sheep into pen
+					dogTarget = Vector(sheep.center.x, sheep.center.y + Constants.DOG_HERDING_DIST)
+					dog.setTargetNode(dogTarget)
+					return PushIntoPenState()
 
 class PushIntoPenState(State):
-	""" This is a state where the dog pushes the sheep into the pen """
-	pass
+	""" This is a state where the dog pushes the sheep into the pen. \
+		This state is active while the dog hasn't reached its target, \
+		Then it returns to ApproachSheepState to calculate a new direction """
+
+	def update(self, gameState):
+		super().update(gameState)
+		dog = gameState.getDog()
+		dogTarget = dog.getTargetNode()
+		sheep = dog.getTargetSheep()
+
+		# Chase the sheep
+		if not dog.isFollowingPath:
+			# When the dog reaches the end of its path, check if sheep still exists
+			if dog.finishedPath is True:
+				# If sheep exists, calculate a new direction
+				if sheep is not None:
+					return ApproachSheepState()
+				else:
+					return Idle()
+			else:
+				# If the dog isn't pathing towards the sheep, set its target
+				dog.calculatePathToNewTarget(dogTarget)
 
 class Idle(State):
 	""" This is an idle state where the dog does nothing """

@@ -22,15 +22,26 @@ class Dog(Agent):
 		self.searchType = SearchType.A_STAR
 		self.gateNumber = 0
 		self.isFollowingPath = False
+		self.finishedPath = False
 		self.path = []
 		self.stateMachine = StateMachine(Idle())
 		self.targetSheep = None
+		self.targetNode = None
 
 	def setTargetSheep(self, sheep):
 		self.targetSheep = sheep
 
+	def setTargetNode(self, target):
+		self.targetNode = target
+	
+	def setFinishedPath(self, pathFinished):
+		self.finishedPath = pathFinished
+
 	def getTargetSheep(self):
 		return self.targetSheep
+
+	def getTargetNode(self):
+		return self.targetNode
 
 	def getPathLength(self):
 		return len(self.path)
@@ -49,6 +60,7 @@ class Dog(Agent):
 				self.path = self.graph.findPath_AStar(self.center, target)
 
 		if len(self.path) > 0:
+			self.finishedPath = False
 			self.isFollowingPath = True
 			self.target = self.path.pop(0).center
 			self.speed = self.maxSpeed
@@ -77,7 +89,10 @@ class Dog(Agent):
 					self.target = self.path.pop(0).center
 				# Stop following the path if it is empty
 				else:
+					self.finishedPath = True
+					print("Self.finishedPath: ", self.finishedPath)
 					self.isFollowingPath = False
+					print("Self.isFollowingPath: ", self.isFollowingPath)
 					self.speed = 0
 			else:
 				self.setVelocity(vectorToTarget)
